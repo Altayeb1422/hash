@@ -1,0 +1,66 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:hash/view/property%20for%20rent/commercial/commercial_for_rent.dart';
+import 'package:hash/view/property%20for%20rent/residential/resedintial_for_rent.dart';
+import '../../model/child.dart';
+import '../../services/child_remote_services.dart';
+import '../../widget/filters_card_widget.dart';
+import '../filter_page_for_the_rest.dart';
+import '../property for sale/residential/resdiential_for_sale.dart';
+
+class PropertyForRentTypes extends StatefulWidget {
+  const PropertyForRentTypes({Key? key,  this.parentId}) :  super(key: key);
+  final dynamic parentId ;
+
+  @override
+  _PropertyForRentTypesState createState() => _PropertyForRentTypesState();
+}
+
+class _PropertyForRentTypesState extends State<PropertyForRentTypes> {
+  List<FilterTabs>? filterTabs;
+  var isLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getChildData();
+  }
+
+  getChildData() async {
+    filterTabs = await ChildRemoteService().getFilterTabs();
+    if (filterTabs != null) {
+      setState(() {
+        isLoaded = true;
+      });
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color:  Colors.black,),
+            onPressed: (){
+              Navigator.pop(context);
+            },
+          ),
+        ),
+     body: Padding(
+       padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10),
+       child: Visibility(
+         visible: isLoaded,
+         child: ListView.builder(
+           itemCount: filterTabs?.length,
+           itemBuilder: (BuildContext context, int index) {
+             return
+               CardWidget(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (_) => const ResdientialForSale()));}, icon: Icons.home, title: filterTabs![index].name, subtitle: 'apart'.tr(),);
+           },
+         ),
+         replacement: const Center(child: CircularProgressIndicator(),),
+       ),
+     ));
+  }
+}
+

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">haash</string>
+    <string name="facebook_app_id">1587745038259764</string>
+    <string name="fb_login_protocol_scheme">fb1587745038259764</string>
+    <string name="facebook_client_token">dd17dc4b6df16ef508e855ce4576d2cf</string>
+</resources>
