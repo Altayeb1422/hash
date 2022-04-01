@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:hash/model/root.dart';
 import 'package:http/http.dart' as http;
@@ -22,7 +20,7 @@ class RemoteService
   Future<List<Tabs>?> getTabs() async
   {
     var client = http.Client();
-    var uri = Uri.parse("http://192.168.237.221/easy/Root.php");
+    var uri = Uri.parse("http://192.168.15.103/easy/Root.php");
     var response = await client.get(uri);
     if(response.statusCode == 200)
       {
