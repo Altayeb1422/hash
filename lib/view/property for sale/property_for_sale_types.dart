@@ -26,14 +26,13 @@ class _PropertyForSaleTypesState extends State<PropertyForSaleTypes> {
   var isLoaded = false;
 
   @override
-  void initState() {
+  void initState()  {
     super.initState();
-    getChildData();
+      getChildData();
   }
 
   getChildData() async {
     filterTabs = await ChildRemoteService().postParentId(widget.parentId);
-    filterTabs = await ChildRemoteService().getFilterTabs();
     if (filterTabs != null) {
       setState(() {
         isLoaded = true;

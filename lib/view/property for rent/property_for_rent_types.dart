@@ -27,7 +27,7 @@ class _PropertyForRentTypesState extends State<PropertyForRentTypes> {
   }
 
   getChildData() async {
-    filterTabs = await ChildRemoteService().getFilterTabs();
+    filterTabs = await ChildRemoteService().postParentId(widget.parentId);
     if (filterTabs != null) {
       setState(() {
         isLoaded = true;

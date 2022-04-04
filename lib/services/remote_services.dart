@@ -8,7 +8,7 @@ class RemoteService
 {
 
   Future postParentId(id) async {
-    var res = await http.post(Uri.parse("http://192.168.138.221/easy/Childs.php"), body:id);
+    var res = await http.post(Uri.parse("http://192.168.120.221/easy/Childs.php"), body:id);
     if(res.statusCode == 200){
       debugPrint("Data posted successfully");
 
@@ -20,12 +20,12 @@ class RemoteService
   Future<List<Tabs>?> getTabs() async
   {
     var client = http.Client();
-    var uri = Uri.parse("http://192.168.15.103/easy/Root.php");
+    var uri = Uri.parse("http://192.168.120.221/easy/Root.php");
     var response = await client.get(uri);
     if(response.statusCode == 200)
       {
         var json = response.body;
-       return tabsFromJson(json);
+        return tabsFromJson(json);
       }
   }
 }
