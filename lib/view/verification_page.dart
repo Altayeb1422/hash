@@ -42,7 +42,7 @@ class _VerificationPageState extends State<VerificationPage> {
       );
       Navigator.of(context).pushNamedAndRemoveUntil("homepage", (route) => false);
     }
-    Login;
+    login;
   }
 
   @override

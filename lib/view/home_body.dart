@@ -15,7 +15,7 @@ import '../model/real_estate_class.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../model/root.dart';
 import 'motors/motors.dart';
-import 'package:http/http.dart' as http;
+
 
 class HomeBody extends StatefulWidget {
   const HomeBody({Key? key}) : super(key: key);
@@ -72,7 +72,7 @@ class _HomeBodyState extends State<HomeBody> {
       ),
       body: SafeArea(
         child: Visibility(
-          replacement: Center(child: CircularProgressIndicator(),),
+          replacement: const Center(child: CircularProgressIndicator(),),
           visible: isLoaded,
           child: ListView(
             physics: const BouncingScrollPhysics(),
@@ -93,8 +93,6 @@ class _HomeBodyState extends State<HomeBody> {
                             MaterialPageRoute(
                                 builder: (_) =>   PropertyForRentTypes(parentId: tabs![index].id,)));}
                         else if(tabs![index].id == '2'){
-                          print(tabs![index].id);
-                          print(tabs![index].name);
                           filterId.add(tabs![index].id);
                           filterName.add(tabs![index].name);
                           Navigator.push(
@@ -113,7 +111,6 @@ class _HomeBodyState extends State<HomeBody> {
                     );
                   },
                   gridDelegate:   const SliverGridDelegateWithFixedCrossAxisCount(
-
                     crossAxisCount: 3,
                   ),
                 ),

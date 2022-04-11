@@ -9,7 +9,7 @@ import 'package:hash/view/forget_password_page.dart';
 import 'package:hash/view/registeration_screen.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
-DateTime Login = DateTime.now();
+DateTime login = DateTime.now();
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -20,9 +20,9 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   var mypassword, myphone;
-  GlobalKey<FormState> formstate = GlobalKey();
+  GlobalKey<FormState> formState = GlobalKey();
   singIn() async {
-    var FormData = formstate.currentState;
+    var FormData = formState.currentState;
     if (FormData!.validate()) {
       FormData.save();
 
@@ -122,14 +122,14 @@ class _SignInState extends State<SignIn> {
                 child: Padding(
                   padding: const EdgeInsets.all(25.0),
                   child: Form(
-                    key: formstate,
+                    key: formState,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           "sing in",
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -267,7 +267,7 @@ class _SignInState extends State<SignIn> {
                         ),
                         MaterialButton(
                           onPressed: () async {
-                            Login;
+                            login;
                             var user = await singIn();
                             if (user != null) {
                               Navigator.of(context).pushNamedAndRemoveUntil(

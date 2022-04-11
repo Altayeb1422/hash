@@ -11,7 +11,6 @@ class RemoteService
     var res = await http.post(Uri.parse("http://192.168.120.221/easy/Childs.php"), body:id);
     if(res.statusCode == 200){
       debugPrint("Data posted successfully");
-
     }else{
       debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
     }

@@ -1,16 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:hash/view/filter_page_for_the_rest.dart';
 import 'package:hash/view/property%20for%20sale/residential/resdiential_for_sale.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../model/child.dart';
 import '../../services/child_remote_services.dart';
 import '../../widget/filters_card_widget.dart';
-import 'commercial/commerial_for_sale.dart';
-import 'package:http/http.dart' as http;
-
-
 
 
 class PropertyForSaleTypes extends StatefulWidget {

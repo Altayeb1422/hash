@@ -138,7 +138,7 @@ class MenuPage extends StatelessWidget {
                               child: CircularProgressIndicator(),
                             ));
                     await loginSession(
-                      Login.toString(),
+                      login.toString(),
                       logout.toString(),
                     );
                     await FacebookAuth.i.logOut();
