@@ -55,8 +55,8 @@ class _PropertyForSaleState extends State<PropertyForSale> {
               ),
               CardWidget(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (_) => const ResdientialForSale()));}, icon: Icons.home, title: "for sale".tr(), subtitle: 'apart'.tr(),),
               CardWidget(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (_) => const  CommercialForSale()));}, icon: Icons.factory_outlined, title: "com sale".tr(), subtitle: 'shop'.tr(),),
-              CardWidget(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (_) => const  FilterPageTheRest()));}, icon: Icons.landscape_outlined, title: "land sale".tr(), subtitle: 'land'.tr(),),
-              CardWidget(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (_) => const  FilterPageTheRest()));}, icon: Icons.location_city_outlined , title: "multi sale".tr(), subtitle: 'comp'.tr(),),
+              CardWidget(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (_) =>   FilterPageTheRest()));}, icon: Icons.landscape_outlined, title: "land sale".tr(), subtitle: 'land'.tr(),),
+              CardWidget(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (_) =>   FilterPageTheRest()));}, icon: Icons.location_city_outlined , title: "multi sale".tr(), subtitle: 'comp'.tr(),),
               const SizedBox(
                 height: 10,
               ),

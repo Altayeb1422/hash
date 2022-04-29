@@ -89,8 +89,7 @@ class _MyAppState extends State<MyApp> {
         brightness: Brightness.light,
         cardColor: const Color(0xfff2f2f2),
       ),
-      initialRoute:
-      FirebaseAuth.instance.currentUser == null ? "intro" : "homepage",
+      initialRoute:"homepage",
       home: const IntroScreen(),
       routes: {
         "login": (context) => const SignIn(),

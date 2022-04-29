@@ -1,11 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:hash/view/property%20for%20rent/commercial/commercial_for_rent.dart';
-import 'package:hash/view/property%20for%20rent/residential/resedintial_for_rent.dart';
 import '../../model/child.dart';
 import '../../services/child_remote_services.dart';
 import '../../widget/filters_card_widget.dart';
-import '../filter_page_for_the_rest.dart';
 import '../property for sale/residential/resdiential_for_sale.dart';
 
 class PropertyForRentTypes extends StatefulWidget {

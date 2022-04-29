@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:hash/main.dart';
 import 'package:hash/services/remote_services.dart';
+import 'package:hash/upload/upload_property.dart';
 import 'package:hash/view/motor_detailes.dart';
 import 'package:hash/view/property%20for%20rent/property_for_rent_types.dart';
 import 'package:hash/view/property%20for%20sale/property_for_sale_types.dart';
@@ -15,7 +17,7 @@ import '../model/real_estate_class.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../model/root.dart';
 import 'motors/motors.dart';
-
+import 'dart:math' as math;
 
 class HomeBody extends StatefulWidget {
   const HomeBody({Key? key}) : super(key: key);
@@ -43,10 +45,56 @@ class _HomeBodyState extends State<HomeBody> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
+    bool isRtl = Directionality.of(context).index == 0;
     return Scaffold(
+      floatingActionButton: SafeArea(
+        child: Transform(
+          alignment: Alignment.center,
+          transform: Matrix4.rotationY(isRtl ? math.pi : 0),
+          child: SpeedDial(
+            icon: Icons.add,
+            backgroundColor: Colors.deepOrange,
+            overlayColor: Colors.black,
+            overlayOpacity: 0.4,
+            children: [
+              SpeedDialChild(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => UploadProperty(adsCode: '',)));
+                },
+                child: const Icon(Icons.real_estate_agent),
+                backgroundColor: Colors.white,
+                labelBackgroundColor: Colors.white,
+                labelWidget: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.rotationY(isRtl ? math.pi : 0),
+                    child: Text(
+                      "property".tr(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    )),
+              ),
+              SpeedDialChild(
+                child: const Icon(Icons.directions_car),
+                backgroundColor: Colors.white,
+                labelBackgroundColor: Colors.white,
+                labelWidget: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.rotationY(isRtl ? math.pi : 0),
+                    child: Text(
+                      "motor".tr(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    )),
+              )
+            ],
+          ),
+        ),
+      ),
       appBar: AppBar(
         title: Center(
             child: Text(
@@ -72,7 +120,9 @@ class _HomeBodyState extends State<HomeBody> {
       ),
       body: SafeArea(
         child: Visibility(
-          replacement: const Center(child: CircularProgressIndicator(),),
+          replacement: const Center(
+            child: CircularProgressIndicator(),
+          ),
           visible: isLoaded,
           child: ListView(
             physics: const BouncingScrollPhysics(),
@@ -87,30 +137,34 @@ class _HomeBodyState extends State<HomeBody> {
                       title: tabs![index].name,
                       icon: tabs![index].icon,
                       onTap: () async {
-                        if(tabs![index].id == '1') {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) =>   PropertyForRentTypes(parentId: tabs![index].id,)));}
-                        else if(tabs![index].id == '2'){
+                        if (tabs![index].id == '1') {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => PropertyForRentTypes(
+                                        parentId: tabs![index].id,
+                                      )));
+                        } else if (tabs![index].id == '2') {
                           filterId.add(tabs![index].id);
                           filterName.add(tabs![index].name);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => PropertyForSaleTypes(parentId: tabs![index].id,)));
-                        }else if(tabs![index].id == '3'){
+                                  builder: (_) => PropertyForSaleTypes(
+                                        parentId: tabs![index].id,
+                                      )));
+                        } else if (tabs![index].id == '3') {
                           filterId.add(tabs![index].id);
                           filterName.add(tabs![index].name);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) =>  const MotorsSale()));
+                                  builder: (_) => const MotorsSale()));
                         }
                       },
                     );
                   },
-                  gridDelegate:   const SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                   ),
                 ),
@@ -215,7 +269,8 @@ class _HomeBodyState extends State<HomeBody> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) =>   PropertyForSaleTypes(parentId: tabs![index].id)));
+                      builder: (_) =>
+                          PropertyForSaleTypes(parentId: tabs![index].id)));
             },
           );
         },

@@ -1,15 +1,42 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
+import 'package:http/http.dart' as http;
 import '../widget/card_widget_filter_page.dart';
 
 class FilterPageTheRest extends StatefulWidget {
-  const FilterPageTheRest({Key? key}) : super(key: key);
-
+   FilterPageTheRest({Key? key, this.select2, this.select3, this.select4, this.select2Name, this.select1Name}) : super(key: key);
+  final dynamic select2;
+  final dynamic select3;
+  final dynamic select4;
+  final dynamic select2Name;
+  final dynamic select1Name;
   @override
   _FilterPageTheRestState createState() => _FilterPageTheRestState();
 }
 
 class _FilterPageTheRestState extends State<FilterPageTheRest> {
+  Future<void> sendData() async {
+    var res = await http.post(Uri.parse("http://192.168.15.100/easy/insert_ads.php"), body: {
+      "Select2": widget.select2,
+      "Select3": widget.select3,
+      "Select4": widget.select4,
+      "Date": DateTime.now().toString(),
+      "AdsCode": 'RS01',
+      "Space": 123.toString(),
+      "CityName": 'Khartoum'
+
+    }); //sending post request with header data
+
+    if(res.statusCode == 200){
+      debugPrint("Data posted successfully");
+      print(res.body);
+      //json.decode(res.body);
+      var jason = res.body;
+    }else{
+      debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -31,8 +58,8 @@ class _FilterPageTheRestState extends State<FilterPageTheRest> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CardWidgetFilterPage(title: "cat".tr(), onTap: (){}, choice: "com sale".tr()),
-              CardWidgetFilterPage(title: "type".tr(), onTap: (){}, choice: "office".tr()),
+              CardWidgetFilterPage(title: 'Category', onTap: (){}, choice: widget.select1Name),
+              CardWidgetFilterPage(title: "type".tr(), onTap: (){}, choice: widget.select2Name),
               CardWidgetFilterPage(title: "City".tr(), onTap: (){}, choice: ''),
               const SizedBox(height: 20,),
                TitleWidget(title: "neighbour".tr()),
@@ -61,7 +88,7 @@ class _FilterPageTheRestState extends State<FilterPageTheRest> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: MaterialButton(
-                    onPressed: () async {},
+                    onPressed: () async {sendData();},
                     elevation: 26,
                     color: Colors.red,
                     shape: RoundedRectangleBorder(
@@ -70,7 +97,7 @@ class _FilterPageTheRestState extends State<FilterPageTheRest> {
                       padding: const EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
-                            "results".tr(),
+                            "Upload",
                           style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
