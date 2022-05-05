@@ -29,7 +29,7 @@ class Tabs {
     id: json["id"],
     name: json["name"],
     englishLabel: json["English_label"],
-    arabicLabel: json["arabic_label"],
+    arabicLabel: json["Arabic_label"],
     parentId: json["parent_id"],
     icon: json["icon"],
   );
@@ -38,7 +38,7 @@ class Tabs {
     "id": id,
     "name": name,
     "English_label": englishLabel,
-    "arabic_label": arabicLabel,
+    "Arabic_label": arabicLabel,
     "parent_id": parentId,
     "icon": icon,
   };

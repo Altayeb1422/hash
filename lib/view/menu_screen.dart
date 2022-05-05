@@ -13,13 +13,18 @@ import 'home_page.dart';
 import 'intro_screen.dart';
 import 'login_screen.dart';
 
-class MenuPage extends StatelessWidget {
+class MenuPage extends StatefulWidget {
   const MenuPage(
       {Key? key, required this.currentItem, required this.onSelectedItem})
       : super(key: key);
   final MenuItem currentItem;
   final ValueChanged<MenuItem> onSelectedItem;
 
+  @override
+  State<MenuPage> createState() => _MenuPageState();
+}
+
+class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -67,7 +72,11 @@ class MenuPage extends StatelessWidget {
                       ),
                       onPressed: () async {
                         await EasyLocalization.of(context)!.setLocale(Locale('ar'));
-                        Restart.restartApp();
+                        print(Intl.getCurrentLocale());
+                        Phoenix.rebirth(context);
+                        //setState(()  {});
+                        //Restart.restartApp();
+                        print(Intl.getCurrentLocale());
                         print(context.locale);
                         ZoomDrawer.of(context)!.toggle();
                       },
@@ -93,8 +102,12 @@ class MenuPage extends StatelessWidget {
                         ),
                       ),
                       onPressed: () async {
-                        await EasyLocalization.of(context)!.setLocale(const Locale('en'));
-                        Restart.restartApp();
+                        await EasyLocalization.of(context)!.setLocale(Locale("en"));
+                        print(Intl.getCurrentLocale());
+                        Phoenix.rebirth(context);
+                        //setState(() async {});
+                        //Restart.restartApp();
+                        print(Intl.getCurrentLocale());
                         print(context.locale);
                         ZoomDrawer.of(context)!.toggle();
                       },
@@ -167,11 +180,11 @@ class MenuPage extends StatelessWidget {
       selectedTileColor: Colors.deepOrange,
       child: ListTile(
         selectedTileColor: Colors.black12,
-        selected: currentItem == item,
+        selected: widget.currentItem == item,
         minLeadingWidth: 20,
         leading: Icon(item.icon),
         title: Text(item.title),
-        onTap: () => onSelectedItem(item),
+        onTap: () => widget.onSelectedItem(item),
       ),
     );
   }

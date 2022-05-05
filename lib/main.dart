@@ -39,9 +39,8 @@ Future main() async {
     Locale('en'),
     Locale('ar'),
   ],
-
   saveLocale: true,
-  fallbackLocale: const Locale('en'),
+  //fallbackLocale: const Locale('en'),
   child: Phoenix(child: const MyApp())));
 }
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -78,10 +77,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     MyLocalController controller = Get.put(MyLocalController());
-    return GetMaterialApp(
+    return MaterialApp(
+      locale: context.locale,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
-      locale: context.locale,
       navigatorKey: navigatorKey,
       title: 'Hash',
       debugShowCheckedModeBanner: false,
@@ -89,7 +88,7 @@ class _MyAppState extends State<MyApp> {
         brightness: Brightness.light,
         cardColor: const Color(0xfff2f2f2),
       ),
-      initialRoute:"homepage",
+      initialRoute: FirebaseAuth.instance.currentUser != null?"homepage":"homepage",
       home: const IntroScreen(),
       routes: {
         "login": (context) => const SignIn(),
@@ -104,7 +103,7 @@ class _MyAppState extends State<MyApp> {
 
 }
 class RestartWidget extends StatefulWidget {
-  RestartWidget({required this.child});
+  const RestartWidget({required this.child});
 
   final Widget child;
 

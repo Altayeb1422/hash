@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
@@ -29,7 +30,6 @@ class HomeBody extends StatefulWidget {
 class _HomeBodyState extends State<HomeBody> {
   List<Tabs>? tabs;
   var isLoaded = false;
-
   @override
   void initState() {
     super.initState();
@@ -47,6 +47,7 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
+    String locale = Intl.getCurrentLocale();
     bool isRtl = Directionality.of(context).index == 0;
     return Scaffold(
       floatingActionButton: SafeArea(
@@ -114,7 +115,8 @@ class _HomeBodyState extends State<HomeBody> {
         actions: [
           IconButton(
               color: Colors.black,
-              onPressed: () async {},
+              onPressed: () async { print(context.locale);
+              },
               icon: const Icon(Icons.search)),
         ],
       ),
@@ -127,16 +129,17 @@ class _HomeBodyState extends State<HomeBody> {
           child: ListView(
             physics: const BouncingScrollPhysics(),
             children: [
-              Container(
+              SizedBox(
                 height: MediaQuery.of(context).size.height * .2,
                 width: MediaQuery.of(context).size.width,
                 child: GridView.builder(
                   itemCount: tabs?.length,
                   itemBuilder: (context, index) {
                     return DubzillCardWidget(
-                      title: tabs![index].name,
+                      title: context.locale.toString() == 'ar'? tabs![index].arabicLabel: tabs![index].englishLabel,
                       icon: tabs![index].icon,
                       onTap: () async {
+                        print(Intl.getCurrentLocale());
                         if (tabs![index].id == '1') {
                           Navigator.push(
                               context,

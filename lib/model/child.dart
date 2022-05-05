@@ -21,7 +21,7 @@ class FilterTabs {
   String id;
   String name;
   String englishLabel;
-  String arabicLabel;
+  String? arabicLabel;
   String parentId;
   String icon;
 

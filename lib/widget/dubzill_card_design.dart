@@ -39,7 +39,6 @@ class DubzillCardWidget extends StatelessWidget {
                   transform: Matrix4.rotationY(isRtl ? math.pi : 0),
                   child: SvgPicture.string(icon, color: Colors.deepOrangeAccent.shade100, height: 40, width: 40, ),
                 ),
-                const SizedBox(height: 8,),
                 Text(
                   title,
                   style: const TextStyle(
