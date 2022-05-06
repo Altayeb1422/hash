@@ -9,6 +9,7 @@ import 'package:hash/local/local_controller.dart';
 import 'package:hash/view/drwer_routing_page.dart';
 import 'package:hash/view/registeration_screen.dart';
 import 'package:hash/view/verification_page.dart';
+import 'bottom_navigation/bottom_navigation_home.dart';
 import 'view/forget_password_page.dart';
 import 'view/intro_screen.dart';
 import 'view/login_screen.dart';
@@ -88,12 +89,12 @@ class _MyAppState extends State<MyApp> {
         brightness: Brightness.light,
         cardColor: const Color(0xfff2f2f2),
       ),
-      initialRoute: FirebaseAuth.instance.currentUser != null?"homepage":"homepage",
+      initialRoute: FirebaseAuth.instance.currentUser != null?"BottomHomeScreen":"BottomHomeScreen",
       home: const IntroScreen(),
       routes: {
         "login": (context) => const SignIn(),
         "signup": (context) => const Register(),
-        "homepage": (context) => const ZoomDrawerRoute(),
+        "BottomHomeScreen": (context) => const BottomHomeScreen(),
         "intro": (context) => const IntroScreen(),
         "verify": (context) => const VerificationPage(),
         "forget": (context) => const ForgetPassword(),

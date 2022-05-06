@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../model/car_class.dart';
 import '../widget/car_ name_price.dart';
+import 'package:photo_view/photo_view.dart';
 
 class MotorDetailes extends StatefulWidget {
   const MotorDetailes({Key? key, required this.cars}) : super(key: key);
