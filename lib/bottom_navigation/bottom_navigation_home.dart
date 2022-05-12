@@ -4,6 +4,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:hash/view/home_body.dart';
 import '../upload/upload_property.dart';
 import '../view/contact_us.dart';
+import '../view/home_page.dart';
 import '../view/notifications_page.dart';
 import '../view/settings.dart';
 import 'dart:math' as math;
@@ -98,7 +99,7 @@ class _BottomHomeScreenState extends State<BottomHomeScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar(
-        elevation: 10,
+        elevation: 30,
         height: MediaQuery.of(context).size.height*0.07,
         iconSize: 30,
         activeColor: Colors.deepOrange,

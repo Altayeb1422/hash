@@ -16,6 +16,7 @@ class Tabs {
     required this.arabicLabel,
     required this.parentId,
     required this.icon,
+    required this.adsCode,
   });
 
   String id;
@@ -24,22 +25,25 @@ class Tabs {
   String arabicLabel;
   String parentId;
   String icon;
+  String adsCode;
 
   factory Tabs.fromJson(Map<String, dynamic> json) => Tabs(
     id: json["id"],
     name: json["name"],
     englishLabel: json["English_label"],
-    arabicLabel: json["Arabic_label"],
+    arabicLabel: json["arabic_label"],
     parentId: json["parent_id"],
     icon: json["icon"],
+    adsCode: json["AdsCode"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,
     "English_label": englishLabel,
-    "Arabic_label": arabicLabel,
+    "arabic_label": arabicLabel,
     "parent_id": parentId,
     "icon": icon,
+    "AdsCode": adsCode,
   };
 }

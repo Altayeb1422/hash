@@ -65,38 +65,6 @@ class _HomePageState extends State<HomePage>
         overlays: [SystemUiOverlay.top]);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      floatingActionButton: SafeArea(
-        child: Transform(
-          alignment: Alignment.center,
-          transform: Matrix4.rotationY(isRtl ? math.pi : 0),
-          child: SpeedDial(
-            icon: Icons.add,
-            backgroundColor: Colors.deepOrange,
-            overlayColor: Colors.black,
-            overlayOpacity: 0.4,
-            children: [
-              SpeedDialChild(
-                child: const Icon(Icons.real_estate_agent),
-                backgroundColor: Colors.white,
-                labelBackgroundColor: Colors.white,
-                labelWidget: Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.rotationY(isRtl ? math.pi : 0),
-                    child: Text("property".tr(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),)),
-              ),
-              SpeedDialChild(
-                child: const Icon(Icons.directions_car),
-                backgroundColor: Colors.white,
-                labelBackgroundColor: Colors.white,
-                labelWidget: Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.rotationY(isRtl ? math.pi : 0),
-                    child: Text("motor".tr(),style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),)),
-              )
-            ],
-          ),
-        ),
-      ),
       appBar: AppBar(
         title: Center(
             child: Text(
