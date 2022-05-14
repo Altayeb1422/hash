@@ -10,6 +10,7 @@ import 'package:hash/view/property%20for%20rent/property_for_rent_types.dart';
 import 'package:hash/view/property%20for%20sale/property_for_sale_types.dart';
 import 'package:hash/view/real_estate_card.dart';
 import 'package:hash/view/real_estate_detailes.dart';
+import 'package:hash/view/single_property_page.dart';
 import 'package:hash/widget/dubzill_card_design.dart';
 import '../model/car_class.dart';
 import '../model/cars_card.dart';
@@ -210,8 +211,20 @@ class _HomeBodyState extends State<HomeBody> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        CarsCard(location: 'Bahri-Crane', title: 'Camery', price: '', img: 'assets/sedan 1.jpg', logo: 'assets/cars/mitsubishi.svg',),
-                        CarsCard(location: 'Omdurman-Muwrada', title: 'Lancer', price: '', img: 'assets/sedan 3.jpg', logo: 'assets/cars/toyota.svg',),
+                        CarsCard(
+                          location: 'Bahri-Crane',
+                          title: 'Camery',
+                          price: '',
+                          img: 'assets/sedan 1.jpg',
+                          logo: 'assets/cars/mitsubishi.svg',
+                        ),
+                        CarsCard(
+                          location: 'Omdurman-Muwrada',
+                          title: 'Lancer',
+                          price: '',
+                          img: 'assets/sedan 3.jpg',
+                          logo: 'assets/cars/toyota.svg',
+                        ),
                       ],
                     ),
                   ),
@@ -320,143 +333,148 @@ class PropertyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height * .35,
-        width: MediaQuery.of(context).size.width * .6,
-        decoration: BoxDecoration(
-            boxShadow:  [
-              BoxShadow(blurRadius: 10.0, color: Colors.grey.withOpacity(0.5))
-            ],
-            color: const Color(0xfff2f2f2),
-            borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * .2,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow:  [
-                    BoxShadow(blurRadius: 12.0, color:Colors.grey.withOpacity(0.5))
-                  ],
-                  image: DecorationImage(
-                    image: AssetImage(
-                      img,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>SinglePropertyDetailPage()));
+        },
+        child: Container(
+          height: MediaQuery.of(context).size.height * .33,
+          width: MediaQuery.of(context).size.width * .6,
+          decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(blurRadius: 10.0, color: Colors.grey.withOpacity(0.5))
+              ],
+              color: const Color(0xfff2f2f2),
+              borderRadius: BorderRadius.circular(20)),
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * .2,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 12.0, color: Colors.grey.withOpacity(0.5))
+                    ],
+                    image: DecorationImage(
+                      image: AssetImage(
+                        img,
+                      ),
+                      fit: BoxFit.cover,
                     ),
-                    fit: BoxFit.cover,
                   ),
                 ),
-              ),
-
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                title,
-                style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    overflow: TextOverflow.ellipsis),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: [
-                  Icon(
-                    Icons.location_on_rounded,
-                    size: 15,
-                    color: Colors.teal,
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    location,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black54,
-                        overflow: TextOverflow.ellipsis),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.shower_rounded,
-                        size: 17,
-                        color: Colors.teal,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "3",
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.black54,
-                            overflow: TextOverflow.ellipsis),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.kitchen_rounded,
-                        size: 17,
-                        color: Colors.teal,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "1",
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.black54,
-                            overflow: TextOverflow.ellipsis),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.meeting_room_rounded,
-                        size: 17,
-                        color: Colors.teal,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "3",
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.black54,
-                            overflow: TextOverflow.ellipsis),
-                      )
-                    ],
-                  ),
-                ],
-              )
-            ],
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  title,
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      overflow: TextOverflow.ellipsis),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_rounded,
+                      size: 15,
+                      color: Colors.teal,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      location,
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black54,
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.bathtub,
+                          size: 17,
+                          color: Colors.teal,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "1",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.black54,
+                              overflow: TextOverflow.ellipsis),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.hotel,
+                          size: 17,
+                          color: Colors.teal,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "2",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.black54,
+                              overflow: TextOverflow.ellipsis),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.zoom_out_map,
+                          size: 17,
+                          color: Colors.teal,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "120 m",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.black54,
+                              overflow: TextOverflow.ellipsis),
+                        )
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -464,14 +482,14 @@ class PropertyCard extends StatelessWidget {
   }
 }
 
-
 class CarsCard extends StatelessWidget {
   const CarsCard({
     Key? key,
     required this.img,
     required this.title,
     required this.location,
-    required this.price, required this.logo,
+    required this.price,
+    required this.logo,
   }) : super(key: key);
   final String img;
   final String title;
@@ -486,7 +504,7 @@ class CarsCard extends StatelessWidget {
         height: MediaQuery.of(context).size.height * .35,
         width: MediaQuery.of(context).size.width * .6,
         decoration: BoxDecoration(
-            boxShadow:  [
+            boxShadow: [
               BoxShadow(blurRadius: 10.0, color: Colors.grey.withOpacity(0.5))
             ],
             color: const Color(0xfff2f2f2),
@@ -502,8 +520,9 @@ class CarsCard extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * .22,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  boxShadow:  [
-                    BoxShadow(blurRadius: 12.0, color:Colors.grey.withOpacity(0.5))
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 12.0, color: Colors.grey.withOpacity(0.5))
                   ],
                   image: DecorationImage(
                     image: AssetImage(
@@ -531,10 +550,10 @@ class CarsCard extends StatelessWidget {
                     height: 50,
                     width: 50,
                     padding: const EdgeInsets.only(right: 12.0),
-                    decoration:   const BoxDecoration(
+                    decoration: const BoxDecoration(
                         border: Border(
-                            right: BorderSide(
-                                width: 1.0, color: Colors.white24))),
+                            right:
+                                BorderSide(width: 1.0, color: Colors.white24))),
                     child: SvgPicture.asset(
                       logo,
                     ),
