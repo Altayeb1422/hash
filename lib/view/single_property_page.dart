@@ -29,10 +29,8 @@ class _SinglePropertyDetailPageState extends State<SinglePropertyDetailPage> {
         child: Icon(Icons.phone),
       ),
       //appBar: AppBar(leading: IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.arrow_back_ios)),),
-      body: Container(
-        height: size.height,
-        width: size.width,
-        decoration: BoxDecoration(color: Colors.white),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -99,17 +97,17 @@ class _SinglePropertyDetailPageState extends State<SinglePropertyDetailPage> {
             SizedBox(
               height: 10,
             ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                physics: BouncingScrollPhysics(),
-                child: Container(
-                  height: size.height * .4,
-                  width: size.width,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    physics: BouncingScrollPhysics(),
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              physics: BouncingScrollPhysics(),
+              child: Container(
+                height: size.height * .439,
+                width: size.width,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  physics: BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +118,7 @@ class _SinglePropertyDetailPageState extends State<SinglePropertyDetailPage> {
                             Text(
                               "Apartment for rent",
                               style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 25,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                   overflow: TextOverflow.ellipsis),
@@ -151,6 +149,7 @@ class _SinglePropertyDetailPageState extends State<SinglePropertyDetailPage> {
                           height: 10,
                         ),
                         Row(
+
                           children: [
                             Icon(
                               Icons.location_on_rounded,
@@ -278,13 +277,18 @@ class Aminties extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+        primary: Colors.white,
+        backgroundColor: Color.fromRGBO(64, 75, 96, .9),
+      ),
       onPressed: () {},
       child: Row(
         children: [
           Icon(
             icon,
             size: 17,
-            color:Colors.teal,
+            //color:Colors.teal,
           ),
           SizedBox(
             width: 5,
@@ -293,7 +297,7 @@ class Aminties extends StatelessWidget {
             title,
             style: TextStyle(
                 fontSize: 15,
-                color: Colors.grey,
+                //color: Colors.grey,
                 overflow: TextOverflow.ellipsis),
           )
         ],
