@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+
 
 class ContactUs extends StatefulWidget {
   const ContactUs({Key? key}) : super(key: key);
@@ -16,14 +16,6 @@ class _ContactUsState extends State<ContactUs> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        leading: IconButton(
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              ZoomDrawer.of(context)!.toggle();
-            }),
       ),
       body:  Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +24,7 @@ class _ContactUsState extends State<ContactUs> {
             padding: EdgeInsets.symmetric(
                 horizontal: 25.0, vertical: 15),
             child: Text(
-              "Contact Us",
+              "Search",
               style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,

@@ -1,12 +1,12 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-// import 'package:hash/view/contact_us.dart';
+// import 'package:hash/view/search.dart';
 // import 'package:hash/view/favorite.dart';
 // import 'package:hash/view/history.dart';
 // import 'package:hash/view/home_page.dart';
 // import 'package:hash/view/menu_screen.dart';
 // import 'package:hash/view/notifications_page.dart';
-// import 'package:hash/view/settings.dart';
+// import 'package:hash/view/user.dart';
 // import '../model/menu_items_class.dart';
 // import 'home_body.dart';
 //

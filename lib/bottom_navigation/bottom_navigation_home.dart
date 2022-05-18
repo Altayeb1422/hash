@@ -1,12 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:hash/view/history.dart';
 import 'package:hash/view/home_body.dart';
 import '../upload/upload_property.dart';
-import '../view/contact_us.dart';
-import '../view/home_page.dart';
-import '../view/notifications_page.dart';
-import '../view/settings.dart';
+import '../view/search.dart';
+import '../view/user.dart';
 import 'dart:math' as math;
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
@@ -23,7 +22,7 @@ class _BottomHomeScreenState extends State<BottomHomeScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   final List<Widget> _screen = [
     HomeBody(),
-    Notifications(),
+    History(),
     ContactUs(),
     Settings(),
   ];

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -25,16 +24,43 @@ class _SettingsState extends State<Settings> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 25.0, vertical: 15),
-              child: Text(
-                "Profile",
-                style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 25.0, vertical: 15),
+                  child: Text(
+                    "Profile",
+                    style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      shape: const RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(20))),
+                      primary: Colors.white,
+                      backgroundColor: Color.fromRGBO(64, 75, 96, .9),
+                    ),
+                    onPressed: () {},
+                    label: Text(
+                      "Log Out",
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                    icon: Icon(Icons.logout_rounded),
+                  ),
+                ),
+              ],
             ),
             Center(
               child: SvgPicture.asset(
@@ -48,7 +74,7 @@ class _SettingsState extends State<Settings> {
             SizedBox(height: 15,),
             Divider(color: Colors.grey, indent: 40, endIndent: 40,),
             OptionsCard(title: "Edit Profile", icon: Icon(Icons.person),),
-            OptionsCard(title: "History", icon: Icon(Icons.history),),
+            OptionsCard(title: "Notifications", icon: Icon(Icons.notifications_rounded),),
             OptionsCard(title: "Settings", icon: Icon(Icons.settings),),
             OptionsCard(title: "Help", icon: Icon(Icons.help),),
             OptionsCard(title: "Contact us", icon: Icon(Icons.call),),
