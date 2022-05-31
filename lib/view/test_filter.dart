@@ -456,6 +456,82 @@ class _TestFilterState extends State<TestFilter> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 25.0, right: 25,),
+              child: Text(
+                "Area",
+                style: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    height: size.height * .1,
+                    width: size.width * .4,
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.zoom_out_map, color:  Colors.teal,),
+                      ),
+                      keyboardType: TextInputType.number,
+                    )),
+                Container(
+                  height: size.height * .1,
+                  width: size.width * .15,
+                  child: Center(child: Text("sq m",style: TextStyle(color: Colors.grey, fontSize: 20, fontWeight: FontWeight.bold),)),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 25.0, right: 25,),
+              child: Text(
+                "Description",
+                style: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 25.0, right: 25, top: 15),
+              child: TextField(
+                maxLines: 10,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: BorderSide(
+                      color: Colors.teal,
+                      width: 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(
+                      color: Colors.teal,
+                      width: 3.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 25.0, right: 25,top: 20),
+              child: Text(
+                "Images",
+                style: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+            ),
             const SizedBox(
               height: 15,
             ),
@@ -463,7 +539,7 @@ class _TestFilterState extends State<TestFilter> {
               padding: const EdgeInsets.all(10.0),
               child: MaterialButton(
                   onPressed: () async {},
-                  elevation: 26,
+                  elevation: 10,
                   color: Colors.red,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(28)),
