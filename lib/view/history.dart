@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'filter_page_for_the_rest.dart';
+
 
 class History extends StatefulWidget {
   History({Key? key}) : super(key: key);
@@ -18,7 +20,7 @@ class _HistoryState extends State<History> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: ListView(
         physics: BouncingScrollPhysics(),
@@ -445,7 +447,7 @@ class _HistoryPropertyCardState extends State<HistoryPropertyCard> {
                       Row(
                         children: [
                           EditDelete(
-                            onTap: () {},
+                            onTap: () {Navigator.push(context, MaterialPageRoute(builder: (Context)=>FilterPageTheRest(select1Name: 'mm',select2: 'scdf',select2Name: "ghjk",select3: 'ghjk',select4: 'hjkl;',) ));},
                             title: 'Edit',
                             icon: Icons.edit,
                             iconColor: Colors.teal,

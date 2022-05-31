@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
 import 'package:http/http.dart' as http;
 import '../widget/card_widget_filter_page.dart';
+import 'package:filter_list/filter_list.dart';
 
 class FilterPageTheRest extends StatefulWidget {
    FilterPageTheRest({Key? key, this.select2, this.select3, this.select4, this.select2Name, this.select1Name}) : super(key: key);
@@ -16,6 +16,30 @@ class FilterPageTheRest extends StatefulWidget {
 }
 
 class _FilterPageTheRestState extends State<FilterPageTheRest> {
+  String ? valueChoose;
+  int tag = 1;
+
+  // multiple choice value
+  List<String> tags = [];
+
+  // list of string options
+  List<String> options = [
+    'News', 'Entertainment', 'Politics',
+    'Automotive', 'Sports', 'Education',
+    'Fashion', 'Travel', 'Food', 'Tech',
+    'Science',
+  ];
+
+  // Create a global key that uniquely identifies the Form widget
+  // and allows validation of the form.
+  //
+  // Note: This is a GlobalKey<FormState>,
+  // not a GlobalKey<MyCustomFormState>.
+  final formKey = GlobalKey<FormState>();
+  late List<String> formValue;
+  // final _formKey = GlobalKey<FormState>();
+  // final _openDropDownProgKey = GlobalKey<DropdownSearchState<String>>();
+  // final _multiKey = GlobalKey<DropdownSearchState<String>>();
   Future<void> sendData() async {
     var res = await http.post(Uri.parse("http://192.168.15.100/easy/insert_ads.php"), body: {
       "Select2": widget.select2,
@@ -51,64 +75,68 @@ class _FilterPageTheRestState extends State<FilterPageTheRest> {
             },
           ),
         ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CardWidgetFilterPage(title: 'Category', onTap: (){}, choice: widget.select1Name),
-              CardWidgetFilterPage(title: "type".tr(), onTap: (){}, choice: widget.select2Name),
-              CardWidgetFilterPage(title: "City".tr(), onTap: (){}, choice: ''),
-              const SizedBox(height: 20,),
-               TitleWidget(title: "neighbour".tr()),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    isDense: true,
-                    hintText: "e.g".tr(),
-                    contentPadding: const EdgeInsets.all(18.0),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius:  BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(color: Colors.redAccent)
-                    ),
+        body: ListView(
+          physics: BouncingScrollPhysics(),
+          // mainAxisAlignment: MainAxisAlignment.start,
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CardWidgetFilterPage(title: 'Category', onTap: (){}, choice: widget.select1Name),
+            CardWidgetFilterPage(title: "type".tr(), onTap: (){}, choice: widget.select2Name),
+            CardWidgetFilterPage(title: "City".tr(), onTap: (){}, choice: ''),
+             TitleWidget(title: "neighbour".tr()),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  isDense: true,
+                  hintText: "e.g".tr(),
+                  contentPadding: const EdgeInsets.all(18.0),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                      borderRadius:  BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(color: Colors.redAccent)
                   ),
                 ),
               ),
-               TitleWidget(title: "price".tr()),
-              const MaxMinBoxes(),
-
-               TitleWidget(title: "space".tr()),
-              const MaxMinBoxes(),
-              const SizedBox(height: 15,),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: MaterialButton(
-                    onPressed: () async {sendData();},
-                    elevation: 26,
-                    color: Colors.red,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(28)),
-                    child:  Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Text(
-                            "Upload",
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Cairo'),
-                        ),
+            ),
+          // ChipsChoice<int>.single(
+          //   value: tag,
+          //   onChanged: (val) => setState(() => tag = val),
+          //   choiceItems: C2Choice.listFrom<int, String>(
+          //     source: options,
+          //     value: (i, v) => i,
+          //     label: (i, v) => v,
+          //   ),
+          // ),
+             TitleWidget(title: "price".tr()),
+            const MaxMinBoxes(),
+             TitleWidget(title: "space".tr()),
+            const MaxMinBoxes(),
+            const SizedBox(height: 15,),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: MaterialButton(
+                  onPressed: () async {sendData();},
+                  elevation: 26,
+                  color: Colors.red,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28)),
+                  child:  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                          "Upload",
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Cairo'),
                       ),
-                    )),
-              ),
-            ],
-          ),
+                    ),
+                  )),
+            ),
+          ],
         ),
       ),
     );
@@ -183,5 +211,13 @@ class TitleWidget extends StatelessWidget {
   }
 }
 
+class City {
+  final int id;
+  final String name;
 
+  City({
+    required this.id,
+    required this.name,
+  });
+}
 

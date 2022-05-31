@@ -33,7 +33,13 @@ class _FilterPageResidentialState extends State<FilterPageResidential> {
             children: [
               CardWidgetFilterPage(title: "cat".tr(), onTap: (){}, choice: "res sale".tr()),
               CardWidgetFilterPage(title: "type".tr(), onTap: (){}, choice: "apart".tr()),
-              CardWidgetFilterPage(title: "City".tr(), onTap: (){}, choice: ''),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CardWidgetFilterPage(title: "City".tr(), onTap: (){}, choice: ''),
+                  CardWidgetFilterPage(title: "City".tr(), onTap: (){}, choice: ''),
+                ],
+              ),
               const SizedBox(height: 20,),
                TitleWidget(title: "neighbour".tr()),
               Padding(

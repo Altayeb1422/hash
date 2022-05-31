@@ -12,6 +12,8 @@ import 'package:hash/view/real_estate_card.dart';
 import 'package:hash/view/real_estate_detailes.dart';
 import 'package:hash/view/single_car_page.dart';
 import 'package:hash/view/single_property_page.dart';
+import 'package:hash/view/test.dart';
+import 'package:hash/view/test_filter.dart';
 import 'package:hash/widget/dubzill_card_design.dart';
 import '../model/car_class.dart';
 import '../model/cars_card.dart';
@@ -63,7 +65,7 @@ class _HomeBodyState extends State<HomeBody> {
               color: Colors.black,
             ),
             onPressed: () {
-              ZoomDrawer.of(context)!.toggle();
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>TestFilter()));
             }),
         actions: [
           IconButton(

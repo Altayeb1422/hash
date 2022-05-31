@@ -25,6 +25,7 @@ class _BottomHomeScreenState extends State<BottomHomeScreen> {
     History(),
     ContactUs(),
     Settings(),
+
   ];
   final iconList = <IconData>[
     Icons.home_rounded,
