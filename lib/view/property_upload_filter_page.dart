@@ -3,17 +3,23 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../widget/card_widget_filter_page.dart';
 import 'package:filter_list/filter_list.dart';
+import 'package:dotted_decoration/dotted_decoration.dart';
 
-class TestFilter extends StatefulWidget {
-  TestFilter({Key? key, this.allTextList, this.selectedUserList})
+class PropertyUploadFilterPage extends StatefulWidget {
+  PropertyUploadFilterPage({Key? key, this.allTextList, this.selectedUserList,this.select2, this.select3, this.select4, this.select2Name, this.select1Name})
       : super(key: key);
   final List<User>? allTextList;
   final List<User>? selectedUserList;
+  final dynamic select2;
+  final dynamic select3;
+  final dynamic select4;
+  final dynamic select2Name;
+  final dynamic select1Name;
   @override
-  _TestFilterState createState() => _TestFilterState();
+  _PropertyUploadFilterPageState createState() => _PropertyUploadFilterPageState();
 }
 
-class _TestFilterState extends State<TestFilter> {
+class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
   String? valueChoose;
   int tag = 1;
   List<User>? selectedUserList = [];
@@ -105,14 +111,20 @@ class _TestFilterState extends State<TestFilter> {
   @override
   Widget build(BuildContext context) {
     List<DropdownMenuItem<String>> menuItems = [
-      DropdownMenuItem(child: Text("USD",style: const TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.bold,
-          color: Colors.black),), value: "USD"),
-      DropdownMenuItem(child: Text("SDG",style: const TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.bold,
-          color: Colors.black),), value: "SDG"),
+      DropdownMenuItem(
+          child: Text(
+            "USD",
+            style: const TextStyle(
+                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          value: "USD"),
+      DropdownMenuItem(
+          child: Text(
+            "SDG",
+            style: const TextStyle(
+                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          value: "SDG"),
     ];
     String selectedValue = "SDG";
     Size size = MediaQuery.of(context).size;
@@ -198,7 +210,10 @@ class _TestFilterState extends State<TestFilter> {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                  left: 25.0, top: 30, right: 25,),
+                left: 25.0,
+                top: 30,
+                right: 25,
+              ),
               child: Text(
                 "Price",
                 style: const TextStyle(
@@ -216,7 +231,10 @@ class _TestFilterState extends State<TestFilter> {
                     width: size.width * .4,
                     child: TextFormField(
                       decoration: InputDecoration(
-                        icon: Icon(Icons.money_rounded, color:  Colors.teal,),
+                        icon: Icon(
+                          Icons.payments_outlined,
+                          color: Colors.teal,
+                        ),
                       ),
                       keyboardType: TextInputType.number,
                     )),
@@ -238,7 +256,10 @@ class _TestFilterState extends State<TestFilter> {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                left: 25.0, right: 25,),
+                left: 25.0,
+                right: 25,
+                top: 10
+              ),
               child: Text(
                 "Rooms",
                 style: const TextStyle(
@@ -253,13 +274,20 @@ class _TestFilterState extends State<TestFilter> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Icon(Icons.bed_rounded,size: 30.0, color: Colors.teal,),
+                    Icon(
+                      Icons.meeting_room_outlined,
+                      size: 30.0,
+                      color: Colors.teal,
+                    ),
                     const SizedBox(height: 10.0),
-                    Text("$_rooms",style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30.0,
-                    ),),
+                    Text(
+                      "$_rooms",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30.0,
+                      ),
+                    ),
                     const SizedBox(height: 10.0),
                     Row(
                       mainAxisSize: MainAxisSize.min,
@@ -280,17 +308,17 @@ class _TestFilterState extends State<TestFilter> {
                               ),
                             ),
                           ),
-                          onTap: (){
+                          onTap: () {
                             setState(() {
-                              if(_rooms > 0 ) _rooms--;
+                              if (_rooms > 0) _rooms--;
                             });
                           },
                           onTapDown: (TapDownDetails details) {
                             print('down');
-                            _timer = Timer.periodic(Duration(milliseconds: 100), (t) {
+                            _timer = Timer.periodic(Duration(milliseconds: 100),
+                                (t) {
                               setState(() {
-                                if(_rooms > 0 )
-                                  _rooms--;
+                                if (_rooms > 0) _rooms--;
                               });
                               print('value $_rooms');
                             });
@@ -314,17 +342,22 @@ class _TestFilterState extends State<TestFilter> {
                             width: 40,
                             height: 40,
                             child: Center(
-                              child: Icon(Icons.add,size: 20.0, color: Colors.white,),
+                              child: Icon(
+                                Icons.add,
+                                size: 20.0,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                          onTap: (){
+                          onTap: () {
                             setState(() {
                               _rooms++;
                             });
                           },
                           onTapDown: (TapDownDetails details) {
                             print('down');
-                            _timer = Timer.periodic(Duration(milliseconds: 100), (t) {
+                            _timer = Timer.periodic(Duration(milliseconds: 100),
+                                (t) {
                               setState(() {
                                 _rooms++;
                               });
@@ -348,7 +381,10 @@ class _TestFilterState extends State<TestFilter> {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                left: 25.0, right: 25,),
+                left: 25.0,
+                right: 25,
+                  top: 10
+              ),
               child: Text(
                 "Bathrooms",
                 style: const TextStyle(
@@ -363,13 +399,20 @@ class _TestFilterState extends State<TestFilter> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Icon(Icons.bathtub_rounded,size: 30.0, color: Colors.teal,),
+                    Icon(
+                      Icons.bathtub_outlined,
+                      size: 30.0,
+                      color: Colors.teal,
+                    ),
                     const SizedBox(height: 10.0),
-                    Text("$_bathrooms",style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30.0,
-                    ),),
+                    Text(
+                      "$_bathrooms",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30.0,
+                      ),
+                    ),
                     const SizedBox(height: 10.0),
                     Row(
                       mainAxisSize: MainAxisSize.min,
@@ -390,17 +433,17 @@ class _TestFilterState extends State<TestFilter> {
                               ),
                             ),
                           ),
-                          onTap: (){
+                          onTap: () {
                             setState(() {
-                              if(_bathrooms > 0 ) _bathrooms--;
+                              if (_bathrooms > 0) _bathrooms--;
                             });
                           },
                           onTapDown: (TapDownDetails details) {
                             print('down');
-                            _timer = Timer.periodic(Duration(milliseconds: 100), (t) {
+                            _timer = Timer.periodic(Duration(milliseconds: 100),
+                                (t) {
                               setState(() {
-                                if(_bathrooms > 0 )
-                                  _bathrooms--;
+                                if (_bathrooms > 0) _bathrooms--;
                               });
                               print('value $_bathrooms');
                             });
@@ -424,17 +467,22 @@ class _TestFilterState extends State<TestFilter> {
                             width: 40,
                             height: 40,
                             child: Center(
-                              child: Icon(Icons.add,size: 20.0, color: Colors.white,),
+                              child: Icon(
+                                Icons.add,
+                                size: 20.0,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                          onTap: (){
+                          onTap: () {
                             setState(() {
                               _bathrooms++;
                             });
                           },
                           onTapDown: (TapDownDetails details) {
                             print('down');
-                            _timer = Timer.periodic(Duration(milliseconds: 100), (t) {
+                            _timer = Timer.periodic(Duration(milliseconds: 100),
+                                (t) {
                               setState(() {
                                 _bathrooms++;
                               });
@@ -458,7 +506,11 @@ class _TestFilterState extends State<TestFilter> {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                left: 25.0, right: 25,),
+                left: 25.0,
+                right: 25,
+                  top: 10,
+                  bottom: 10
+              ),
               child: Text(
                 "Area",
                 style: const TextStyle(
@@ -476,20 +528,34 @@ class _TestFilterState extends State<TestFilter> {
                     width: size.width * .4,
                     child: TextFormField(
                       decoration: InputDecoration(
-                        icon: Icon(Icons.zoom_out_map, color:  Colors.teal,),
+                        icon: Icon(
+                          Icons.zoom_out_map,
+                          color: Colors.teal,
+                        ),
                       ),
                       keyboardType: TextInputType.number,
                     )),
                 Container(
                   height: size.height * .1,
                   width: size.width * .15,
-                  child: Center(child: Text("sq m",style: TextStyle(color: Colors.grey, fontSize: 20, fontWeight: FontWeight.bold),)),
+                  child: Center(
+                      child: Text(
+                    "sq m",
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  )),
                 ),
               ],
             ),
             Padding(
               padding: const EdgeInsets.only(
-                left: 25.0, right: 25,),
+                left: 25.0,
+                right: 25,
+                  top: 10,
+                  bottom: 10
+              ),
               child: Text(
                 "Description",
                 style: const TextStyle(
@@ -499,8 +565,7 @@ class _TestFilterState extends State<TestFilter> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                left: 25.0, right: 25, top: 15),
+              padding: const EdgeInsets.only(left: 25.0, right: 25, top: 15),
               child: TextField(
                 maxLines: 10,
                 decoration: InputDecoration(
@@ -522,8 +587,7 @@ class _TestFilterState extends State<TestFilter> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                left: 25.0, right: 25,top: 20),
+              padding: const EdgeInsets.only(left: 25.0, right: 25, top: 25, bottom: 10),
               child: Text(
                 "Images",
                 style: const TextStyle(
@@ -531,6 +595,38 @@ class _TestFilterState extends State<TestFilter> {
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 25.0, right: 25, top: 15),
+              child: Container(
+                height: size.height*.2,
+                  decoration: DottedDecoration(
+                      shape: Shape.box,
+                      strokeWidth: 2,
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.teal),
+                  child: Center(
+                    child: Container(
+                      height: size.height,
+                      width: size.width,
+
+                      decoration: BoxDecoration(
+                        borderRadius:  BorderRadius.circular(20),
+                        color: Colors.teal.withOpacity(0.07),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add_photo_alternate_outlined, size: 50, color: Colors.teal,),
+                          SizedBox(height: 15,),
+                          Text('Upload Images', style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),),
+                        ],
+                      ),
+                    ),
+                  )),
             ),
             const SizedBox(
               height: 15,
@@ -813,5 +909,3 @@ class Aminties extends StatelessWidget {
     );
   }
 }
-
-

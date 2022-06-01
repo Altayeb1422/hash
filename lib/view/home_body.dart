@@ -13,13 +13,14 @@ import 'package:hash/view/real_estate_detailes.dart';
 import 'package:hash/view/single_car_page.dart';
 import 'package:hash/view/single_property_page.dart';
 import 'package:hash/view/test.dart';
-import 'package:hash/view/test_filter.dart';
+import 'package:hash/view/property_upload_filter_page.dart';
 import 'package:hash/widget/dubzill_card_design.dart';
 import '../model/car_class.dart';
 import '../model/cars_card.dart';
 import '../model/real_estate_class.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../model/root.dart';
+import 'cars_upload_filter_page.dart';
 import 'motors/motors.dart';
 
 class HomeBody extends StatefulWidget {
@@ -65,7 +66,7 @@ class _HomeBodyState extends State<HomeBody> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>TestFilter()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>CarsUploadFilterPage()));
             }),
         actions: [
           IconButton(

@@ -5,6 +5,7 @@ import 'package:hash/widget/filters_card_widget_no_sub.dart';
 import '../../model/child.dart';
 import '../../services/child_remote_services.dart';
 import '../../view/filter_page_for_the_rest.dart';
+import '../../view/property_upload_filter_page.dart';
 
 class UploadPropertyForRentTypes extends StatefulWidget {
     const UploadPropertyForRentTypes({Key? key, required this.select1, required this.select2, this.select2Name}) : super(key: key);
@@ -64,7 +65,7 @@ class _UploadPropertyForRentTypesState extends State<UploadPropertyForRentTypes>
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) =>  FilterPageTheRest(select2:widget.select1, select3: widget.select2, select4: filterTabs![index].id, select1Name: widget.select2Name, select2Name: filterTabs![index].name,)));
+                            builder: (_) =>  PropertyUploadFilterPage(select2:widget.select1, select3: widget.select2, select4: filterTabs![index].id, select1Name: widget.select2Name, select2Name: filterTabs![index].name,)));
                   },
                   title: filterTabs![index].name,
                 );
