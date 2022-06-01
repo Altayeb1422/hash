@@ -154,6 +154,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+
                 Container(
                     height: size.height * .1,
                     width: size.width * .5,
@@ -166,6 +167,32 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                         title: "Area".tr(), onTap: () {}, choice: '')),
               ],
             ),
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 25.0, right: 25, top: 30, bottom: 10),
+              child: Text(
+                "Title",
+                style: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+            ),
+            Center(
+              child: Container(
+                  height: size.height * .1,
+                  width: size.width * .7,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      icon: Icon(
+                        Icons.house_outlined,
+                        color: Colors.teal,
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                  )),
+            ),
+
             TitleWidget(title: "Amenities".tr()),
             // TextButton.icon(
             //   onPressed: _openFilterDialog,
@@ -765,11 +792,11 @@ class TitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-          const EdgeInsets.only(left: 25.0, top: 30, right: 25, bottom: 15),
+          const EdgeInsets.only(left: 25.0, right: 25, bottom: 15),
       child: Text(
         title,
         style: const TextStyle(
-            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+            fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black),
       ),
     );
   }
@@ -897,7 +924,7 @@ class Aminties extends StatelessWidget {
       label: Text(
         title,
         style: TextStyle(
-            fontSize: 15,
+            fontSize: 5,
             //color: Colors.grey,
             overflow: TextOverflow.ellipsis),
       ),
