@@ -1,9 +1,17 @@
 import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import '../widget/card_widget_filter_page.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
+
+
+
+TextEditingController titleController = TextEditingController();
+TextEditingController priceController = TextEditingController();
+TextEditingController spaceController = TextEditingController();
+TextEditingController descController = TextEditingController();
 
 class PropertyUploadFilterPage extends StatefulWidget {
   PropertyUploadFilterPage({Key? key, this.allTextList, this.selectedUserList,this.select2, this.select3, this.select4, this.select2Name, this.select1Name})
@@ -20,6 +28,36 @@ class PropertyUploadFilterPage extends StatefulWidget {
 }
 
 class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
+
+  Future<void> propertyMainUpload() async {
+    var res = await http.post(Uri.parse("http://192.168.15.116/easy/insert_ads.php"), body: {
+      "Client_ID": "",
+      "AdsCode": "",
+      "Select2": widget.select2.toString(),
+      "Select3": widget.select3.toString(),
+      "Select4": widget.select4.toString(),
+      "Rooms": _rooms.toString(),
+      "Bathrooms": _bathrooms.toString(),
+      "Floors": _floors.toString(),
+      "Currancy": currencySelectedValue.toString(),
+      "Period": periodSelectedValue.toString(),
+      "Titel": titleController.text.toString(),
+      "Price": priceController.text.toString(),
+      "Space": spaceController.text.toString(),
+      "GeneralDescription": descController.text.toString(),
+      "CityName": "Khartoum",
+      "AreaName": "Buri",
+    }); //sending post request with header data
+
+    if (res.statusCode == 200) {
+      print(res.body);
+      print("Post sucessful"); //print raw response on console
+      //var data = json.decode(res.body); //decoding json to array
+    } else{
+      debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
+    }
+  }
+
   String? valueChoose;
   int tag = 1;
   List<User>? selectedUserList = [];
@@ -50,27 +88,39 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
       onApplyButtonClick: (list) {
         setState(() {
           selectedUserList = List.from(list!);
+          print(selectedUserList);
         });
         print(list);
         Navigator.pop(context);
+        print(selectedUserList);
       },
 
       /// uncomment below code to create custom choice chip
-      /*choiceChipBuilder: (context, item, isSelected) {
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          decoration: BoxDecoration(
-              border: Border.all(
-            color: isSelected! ? Colors.blue[300]! : Colors.grey[300]!,
-          )),
-          child: Text(
-            item.name,
-            style: TextStyle(
-                color: isSelected ? Colors.blue[300] : Colors.grey[300]),
-          ),
-        );
-      },*/
+      // choiceChipBuilder: (context, item, isSelected) {
+      //   return Container(
+      //     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      //     margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      //     decoration: BoxDecoration(
+      //       borderRadius: BorderRadius.circular(28),
+      //         border: Border.all(
+      //       color: isSelected! ? Colors.teal[300]! : Colors.grey[300]!,
+      //     )),
+      //     child: Row(
+      //       children: [
+      //         Icon(
+      //           item.icon,
+      //           size: 18,
+      //           color: Colors.teal,
+      //         ),
+      //         Text(
+      //           item.service,
+      //           style: TextStyle(
+      //               color: isSelected ? Colors.black : Colors.grey[300]),
+      //         ),
+      //       ],
+      //     ),
+      //   );
+      // },
     );
   }
 
@@ -105,30 +155,56 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
   //     debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
   //   }
   // }
+
+  var title,
+      price,
+      space,
+      desc;
+  //GlobalKey<FormState> formstate = GlobalKey();
   late Timer _timer;
   var _rooms = 0;
   var _bathrooms = 0;
+  var _floors = 0;
+  var period;
+  var  currency;
+  List<DropdownMenuItem<String>> menuItems = [
+    DropdownMenuItem(
+        child: Text(
+          "USD",
+          style: const TextStyle(
+              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        value: "USD"),
+    DropdownMenuItem(
+        child: Text(
+          "SDG",
+          style: const TextStyle(
+              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        value: "SDG"),
+  ];
+  List<DropdownMenuItem<String>> periods = [
+    DropdownMenuItem(
+        child: Text(
+          "Day",
+          style: const TextStyle(
+              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        value: "Day"),
+    DropdownMenuItem(
+        child: Text(
+          "Month",
+          style: const TextStyle(
+              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        value: "Month"),
+  ];
+  String periodSelectedValue = "Month";
+  String currencySelectedValue = "SDG";
   @override
   Widget build(BuildContext context) {
-    List<DropdownMenuItem<String>> menuItems = [
-      DropdownMenuItem(
-          child: Text(
-            "USD",
-            style: const TextStyle(
-                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          value: "USD"),
-      DropdownMenuItem(
-          child: Text(
-            "SDG",
-            style: const TextStyle(
-                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          value: "SDG"),
-    ];
-    String selectedValue = "SDG";
-    Size size = MediaQuery.of(context).size;
 
+    Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -149,12 +225,11 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
           // mainAxisAlignment: MainAxisAlignment.start,
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CardWidgetFilterPage(title: 'Category', onTap: () {}, choice: ""),
-            CardWidgetFilterPage(title: "type".tr(), onTap: () {}, choice: "k"),
+            CardWidgetFilterPage(title: 'Category', onTap: () {}, choice: widget.select1Name ),
+            CardWidgetFilterPage(title: "type".tr(), onTap: () {}, choice: widget.select2Name),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-
                 Container(
                     height: size.height * .1,
                     width: size.width * .5,
@@ -183,13 +258,17 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                   height: size.height * .1,
                   width: size.width * .7,
                   child: TextFormField(
+                    onSaved: (val){
+                      title = val;
+                    },
+                    controller: titleController,
                     decoration: InputDecoration(
                       icon: Icon(
                         Icons.house_outlined,
                         color: Colors.teal,
                       ),
                     ),
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.text,
                   )),
             ),
 
@@ -240,6 +319,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                 left: 25.0,
                 top: 30,
                 right: 25,
+                bottom: 10,
               ),
               child: Text(
                 "Price",
@@ -257,6 +337,11 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                     height: size.height * .1,
                     width: size.width * .4,
                     child: TextFormField(
+                      onSaved: (val){
+                        price = val;
+                      },
+
+                      controller: priceController,
                       decoration: InputDecoration(
                         icon: Icon(
                           Icons.payments_outlined,
@@ -269,12 +354,33 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                   height: size.height * .1,
                   width: size.width * .15,
                   child: DropdownButtonFormField(
+                    onSaved: (val){
+                      currency = currencySelectedValue;
+                    },
                     iconEnabledColor: Colors.teal,
                     items: menuItems,
-                    value: selectedValue,
+                    value: currencySelectedValue,
                     onChanged: (String? newValue) {
                       setState(() {
-                        selectedValue = newValue!;
+                        currencySelectedValue = newValue!;
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(width: 5,),
+                Container(
+                  height: size.height * .1,
+                  width: size.width * .17,
+                  child: DropdownButtonFormField(
+                    onSaved: (val){
+                      period = val;
+                    },
+                    iconEnabledColor: Colors.teal,
+                    items: periods,
+                    value: periodSelectedValue,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        periodSelectedValue = newValue!;
                       });
                     },
                   ),
@@ -533,13 +639,138 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(
+                  left: 25.0,
+                  right: 25,
+                  top: 10
+              ),
+              child: Text(
+                "Floors",
+                style: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+            ),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(
+                      Icons.apartment_rounded,
+                      size: 30.0,
+                      color: Colors.teal,
+                    ),
+                    const SizedBox(height: 10.0),
+                    Text(
+                      "$_floors",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30.0,
+                      ),
+                    ),
+                    const SizedBox(height: 10.0),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.teal,
+                            ),
+                            width: 40,
+                            height: 40,
+                            child: Center(
+                              child: Container(
+                                color: Colors.white,
+                                width: 15,
+                                height: 2.0,
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              if (_floors > 0) _floors--;
+                            });
+                          },
+                          onTapDown: (TapDownDetails details) {
+                            print('down');
+                            _timer = Timer.periodic(Duration(milliseconds: 100),
+                                    (t) {
+                                  setState(() {
+                                    if (_floors > 0) _floors--;
+                                  });
+                                  print('value $_floors');
+                                });
+                          },
+                          onTapUp: (TapUpDetails details) {
+                            print('up');
+                            _timer.cancel();
+                          },
+                          onTapCancel: () {
+                            print('cancel');
+                            _timer.cancel();
+                          },
+                        ),
+                        const SizedBox(width: 10.0),
+                        GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.teal,
+                            ),
+                            width: 40,
+                            height: 40,
+                            child: Center(
+                              child: Icon(
+                                Icons.add,
+                                size: 20.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              _floors++;
+                            });
+                          },
+                          onTapDown: (TapDownDetails details) {
+                            print('down');
+                            _timer = Timer.periodic(Duration(milliseconds: 100),
+                                    (t) {
+                                  setState(() {
+                                    _floors++;
+                                  });
+                                  print('value $_floors');
+                                });
+                          },
+                          onTapUp: (TapUpDetails details) {
+                            print('up');
+                            _timer.cancel();
+                          },
+                          onTapCancel: () {
+                            print('cancel');
+                            _timer.cancel();
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
                 left: 25.0,
                 right: 25,
                   top: 10,
                   bottom: 10
               ),
               child: Text(
-                "Area",
+                "Space",
                 style: const TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
@@ -554,6 +785,10 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                     height: size.height * .1,
                     width: size.width * .4,
                     child: TextFormField(
+                      onSaved: (val){
+                        space = val;
+                      },
+                      controller: spaceController,
                       decoration: InputDecoration(
                         icon: Icon(
                           Icons.zoom_out_map,
@@ -593,7 +828,11 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 25.0, right: 25, top: 15),
-              child: TextField(
+              child: TextFormField(
+                onSaved: (val){
+                  desc = val;
+                },
+                controller: descController,
                 maxLines: 10,
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
@@ -661,7 +900,9 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: MaterialButton(
-                  onPressed: () async {},
+                  onPressed: () async {
+                    await propertyMainUpload();
+                  },
                   elevation: 10,
                   color: Colors.red,
                   shape: RoundedRectangleBorder(
@@ -915,22 +1156,26 @@ class Aminties extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton.icon(
       style: OutlinedButton.styleFrom(
-        shape: const RoundedRectangleBorder(
+        side: BorderSide(width: 1.0, color: Colors.teal),
+        shape:  RoundedRectangleBorder(
+            side: BorderSide(
+              color: Colors.teal,
+            ),
             borderRadius: BorderRadius.all(Radius.circular(20))),
-        primary: Colors.white,
-        backgroundColor: Color.fromRGBO(64, 75, 96, .9),
+        primary: Colors.black,
+        //backgroundColor: Color.fromRGBO(64, 75, 96, .9),
       ),
       onPressed: () {},
       label: Text(
         title,
         style: TextStyle(
-            fontSize: 5,
+            fontSize: 16,
             //color: Colors.grey,
             overflow: TextOverflow.ellipsis),
       ),
       icon: Icon(
         icon,
-        size: 17,
+        size: 18,
         color: Colors.teal,
       ),
     );

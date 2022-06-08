@@ -276,31 +276,29 @@ class Aminties extends StatelessWidget {
   final String title;
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
+    return OutlinedButton.icon(
       style: OutlinedButton.styleFrom(
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-        primary: Colors.white,
-        backgroundColor: Color.fromRGBO(64, 75, 96, .9),
+        side: BorderSide(width: 1.0, color: Colors.teal),
+        shape:  RoundedRectangleBorder(
+            side: BorderSide(
+              color: Colors.teal,
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        primary: Colors.black,
+        //backgroundColor: Color.fromRGBO(64, 75, 96, .9),
       ),
       onPressed: () {},
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            size: 17,
-            //color:Colors.teal,
-          ),
-          SizedBox(
-            width: 5,
-          ),
-          Text(
-            title,
-            style: TextStyle(
-                fontSize: 15,
-                //color: Colors.grey,
-                overflow: TextOverflow.ellipsis),
-          )
-        ],
+      label: Text(
+        title,
+        style: TextStyle(
+            fontSize: 16,
+            //color: Colors.grey,
+            overflow: TextOverflow.ellipsis),
+      ),
+      icon: Icon(
+        icon,
+        size: 18,
+        color: Colors.teal,
       ),
     );
   }
