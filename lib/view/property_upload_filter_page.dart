@@ -971,54 +971,6 @@ class FilterPage extends StatelessWidget {
   }
 }
 
-class MaxMinBoxes extends StatelessWidget {
-  const MaxMinBoxes({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                isDense: true,
-                hintText: "min".tr(),
-                contentPadding: const EdgeInsets.all(18.0),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(color: Colors.redAccent)),
-              ),
-            ),
-          ),
-          // const SizedBox(
-          //   width: 25,
-          // ),
-          // Expanded(
-          //   child: TextField(
-          //     decoration: InputDecoration(
-          //       isDense: true,
-          //       hintText: "max".tr(),
-          //       contentPadding: const EdgeInsets.all(18.0),
-          //       filled: true,
-          //       fillColor: Colors.white,
-          //       border: OutlineInputBorder(
-          //           borderRadius: BorderRadius.circular(10.0),
-          //           borderSide: const BorderSide(color: Colors.redAccent)),
-          //     ),
-          //   ),
-          // ),
-        ],
-      ),
-    );
-  }
-}
-
 class TitleWidget extends StatelessWidget {
   const TitleWidget({
     Key? key,
