@@ -1,12 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get_connect/http/src/multipart/multipart_file.dart';
 import 'package:http/http.dart' as http;
 import '../widget/card_widget_filter_page.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
-
-
 
 TextEditingController titleController = TextEditingController();
 TextEditingController priceController = TextEditingController();
@@ -14,7 +15,15 @@ TextEditingController spaceController = TextEditingController();
 TextEditingController descController = TextEditingController();
 
 class PropertyUploadFilterPage extends StatefulWidget {
-  PropertyUploadFilterPage({Key? key, this.allTextList, this.selectedUserList,this.select2, this.select3, this.select4, this.select2Name, this.select1Name})
+  PropertyUploadFilterPage(
+      {Key? key,
+      this.allTextList,
+      this.selectedUserList,
+      this.select2,
+      this.select3,
+      this.select4,
+      this.select2Name,
+      this.select1Name})
       : super(key: key);
   final List<User>? allTextList;
   final List<User>? selectedUserList;
@@ -24,13 +33,15 @@ class PropertyUploadFilterPage extends StatefulWidget {
   final dynamic select2Name;
   final dynamic select1Name;
   @override
-  _PropertyUploadFilterPageState createState() => _PropertyUploadFilterPageState();
+  _PropertyUploadFilterPageState createState() =>
+      _PropertyUploadFilterPageState();
 }
 
 class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
-
+  var adsId;
   Future<void> propertyMainUpload() async {
-    var res = await http.post(Uri.parse("http://192.168.15.116/easy/insert_ads.php"), body: {
+    var res = await http
+        .post(Uri.parse("http://192.168.15.116/easy/insert_ads.php"), body: {
       "Client_ID": "",
       "AdsCode": "",
       "Select2": widget.select2.toString(),
@@ -52,18 +63,38 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
     if (res.statusCode == 200) {
       print(res.body);
       print("Post sucessful"); //print raw response on console
-      //var data = json.decode(res.body); //decoding json to array
-    } else{
+      var data = json.decode(res.body);
+      adsId = data["AdsId"];
+      print(data["AdsId"]); //decoding json to array
+    } else {
       debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
     }
   }
+
+  postingList(String service) async {
+    final uri = "http://192.168.15.116/easy/features.php";
+    data = {"Ads_Id": adsId.toString(), "Desc_Name": service};
+    http.Response response = await http.post(
+      Uri.parse(uri),
+      body: data,
+    );
+    if (response.statusCode == 200) {
+      //show your outputs
+      print(selectedUserList!.toString());
+    } else {
+      Fluttertoast.showToast(msg: "“Error Occurred”", timeInSecForIosWeb: 25);
+    }
+  }
+
+
 
   String? valueChoose;
   int tag = 1;
   List<User>? selectedUserList = [];
   // multiple choice value
   List<String> tags = [];
-
+   String? hireID;
+   Map<String, String>? data;
   // list of string options
   void _openFilterDialog() async {
     await FilterListDialog.display<User>(
@@ -88,9 +119,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
       onApplyButtonClick: (list) {
         setState(() {
           selectedUserList = List.from(list!);
-          print(selectedUserList);
         });
-        print(list);
         Navigator.pop(context);
         print(selectedUserList);
       },
@@ -131,42 +160,13 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
   // not a GlobalKey<MyCustomFormState>.
   final formKey = GlobalKey<FormState>();
   late List<String> formValue;
-  // final _formKey = GlobalKey<FormState>();
-  // final _openDropDownProgKey = GlobalKey<DropdownSearchState<String>>();
-  // final _multiKey = GlobalKey<DropdownSearchState<String>>();
-  // Future<void> sendData() async {
-  //   var res = await http.post(Uri.parse("http://192.168.15.100/easy/insert_ads.php"), body: {
-  //     "Select2": widget.select2,
-  //     "Select3": widget.select3,
-  //     "Select4": widget.select4,
-  //     "Date": DateTime.now().toString(),
-  //     "AdsCode": 'RS01',
-  //     "Space": 123.toString(),
-  //     "CityName": 'Khartoum'
-  //
-  // //   }); //sending post request with header data
-  //
-  //   if(res.statusCode == 200){
-  //     debugPrint("Data posted successfully");
-  //     print(res.body);
-  //     //json.decode(res.body);
-  //     var jason = res.body;
-  //   }else{
-  //     debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
-  //   }
-  // }
-
-  var title,
-      price,
-      space,
-      desc;
-  //GlobalKey<FormState> formstate = GlobalKey();
+  var title, price, space, desc;
   late Timer _timer;
   var _rooms = 0;
   var _bathrooms = 0;
   var _floors = 0;
   var period;
-  var  currency;
+  var currency;
   List<DropdownMenuItem<String>> menuItems = [
     DropdownMenuItem(
         child: Text(
@@ -203,7 +203,6 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
   String currencySelectedValue = "SDG";
   @override
   Widget build(BuildContext context) {
-
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -225,8 +224,10 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
           // mainAxisAlignment: MainAxisAlignment.start,
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CardWidgetFilterPage(title: 'Category', onTap: () {}, choice: widget.select1Name ),
-            CardWidgetFilterPage(title: "type".tr(), onTap: () {}, choice: widget.select2Name),
+            CardWidgetFilterPage(
+                title: 'Category', onTap: () {}, choice: widget.select1Name),
+            CardWidgetFilterPage(
+                title: "type".tr(), onTap: () {}, choice: widget.select2Name),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -258,7 +259,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                   height: size.height * .1,
                   width: size.width * .7,
                   child: TextFormField(
-                    onSaved: (val){
+                    onSaved: (val) {
                       title = val;
                     },
                     controller: titleController,
@@ -293,7 +294,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                 itemBuilder: (context, index) {
                   return Aminties(
                     title: selectedUserList![index].service!,
-                    icon: selectedUserList![index].icon!,
+                    icon: selectedUserList![index].icon!, onTap: () {postingList(selectedUserList![index].service!);},
                   );
                 },
                 //separatorBuilder: (context, index) => Divider(),
@@ -337,10 +338,9 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                     height: size.height * .1,
                     width: size.width * .4,
                     child: TextFormField(
-                      onSaved: (val){
+                      onSaved: (val) {
                         price = val;
                       },
-
                       controller: priceController,
                       decoration: InputDecoration(
                         icon: Icon(
@@ -354,7 +354,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                   height: size.height * .1,
                   width: size.width * .15,
                   child: DropdownButtonFormField(
-                    onSaved: (val){
+                    onSaved: (val) {
                       currency = currencySelectedValue;
                     },
                     iconEnabledColor: Colors.teal,
@@ -367,12 +367,14 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                     },
                   ),
                 ),
-                SizedBox(width: 5,),
+                SizedBox(
+                  width: 5,
+                ),
                 Container(
                   height: size.height * .1,
                   width: size.width * .17,
                   child: DropdownButtonFormField(
-                    onSaved: (val){
+                    onSaved: (val) {
                       period = val;
                     },
                     iconEnabledColor: Colors.teal,
@@ -388,11 +390,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                left: 25.0,
-                right: 25,
-                top: 10
-              ),
+              padding: const EdgeInsets.only(left: 25.0, right: 25, top: 10),
               child: Text(
                 "Rooms",
                 style: const TextStyle(
@@ -513,11 +511,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                left: 25.0,
-                right: 25,
-                  top: 10
-              ),
+              padding: const EdgeInsets.only(left: 25.0, right: 25, top: 10),
               child: Text(
                 "Bathrooms",
                 style: const TextStyle(
@@ -638,11 +632,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 25.0,
-                  right: 25,
-                  top: 10
-              ),
+              padding: const EdgeInsets.only(left: 25.0, right: 25, top: 10),
               child: Text(
                 "Floors",
                 style: const TextStyle(
@@ -699,12 +689,12 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                           onTapDown: (TapDownDetails details) {
                             print('down');
                             _timer = Timer.periodic(Duration(milliseconds: 100),
-                                    (t) {
-                                  setState(() {
-                                    if (_floors > 0) _floors--;
-                                  });
-                                  print('value $_floors');
-                                });
+                                (t) {
+                              setState(() {
+                                if (_floors > 0) _floors--;
+                              });
+                              print('value $_floors');
+                            });
                           },
                           onTapUp: (TapUpDetails details) {
                             print('up');
@@ -740,12 +730,12 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                           onTapDown: (TapDownDetails details) {
                             print('down');
                             _timer = Timer.periodic(Duration(milliseconds: 100),
-                                    (t) {
-                                  setState(() {
-                                    _floors++;
-                                  });
-                                  print('value $_floors');
-                                });
+                                (t) {
+                              setState(() {
+                                _floors++;
+                              });
+                              print('value $_floors');
+                            });
                           },
                           onTapUp: (TapUpDetails details) {
                             print('up');
@@ -764,11 +754,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                left: 25.0,
-                right: 25,
-                  top: 10,
-                  bottom: 10
-              ),
+                  left: 25.0, right: 25, top: 10, bottom: 10),
               child: Text(
                 "Space",
                 style: const TextStyle(
@@ -785,7 +771,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                     height: size.height * .1,
                     width: size.width * .4,
                     child: TextFormField(
-                      onSaved: (val){
+                      onSaved: (val) {
                         space = val;
                       },
                       controller: spaceController,
@@ -813,11 +799,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                left: 25.0,
-                right: 25,
-                  top: 10,
-                  bottom: 10
-              ),
+                  left: 25.0, right: 25, top: 10, bottom: 10),
               child: Text(
                 "Description",
                 style: const TextStyle(
@@ -829,7 +811,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
             Padding(
               padding: const EdgeInsets.only(left: 25.0, right: 25, top: 15),
               child: TextFormField(
-                onSaved: (val){
+                onSaved: (val) {
                   desc = val;
                 },
                 controller: descController,
@@ -853,7 +835,8 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 25.0, right: 25, top: 25, bottom: 10),
+              padding: const EdgeInsets.only(
+                  left: 25.0, right: 25, top: 25, bottom: 10),
               child: Text(
                 "Images",
                 style: const TextStyle(
@@ -865,7 +848,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
             Padding(
               padding: const EdgeInsets.only(left: 25.0, right: 25, top: 15),
               child: Container(
-                height: size.height*.2,
+                  height: size.height * .2,
                   decoration: DottedDecoration(
                       shape: Shape.box,
                       strokeWidth: 2,
@@ -875,20 +858,28 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                     child: Container(
                       height: size.height,
                       width: size.width,
-
                       decoration: BoxDecoration(
-                        borderRadius:  BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(20),
                         color: Colors.teal.withOpacity(0.07),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.add_photo_alternate_outlined, size: 50, color: Colors.teal,),
-                          SizedBox(height: 15,),
-                          Text('Upload Images', style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),),
+                          Icon(
+                            Icons.add_photo_alternate_outlined,
+                            size: 50,
+                            color: Colors.teal,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            'Upload Images',
+                            style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
                         ],
                       ),
                     ),
@@ -902,6 +893,11 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
               child: MaterialButton(
                   onPressed: () async {
                     await propertyMainUpload();
+                    for (int i = 0; i <= selectedUserList!.length-1; i++){
+                      if(selectedUserList![i].service! != null){
+                        postingList(selectedUserList![i].service!);
+                      }
+                    }
                   },
                   elevation: 10,
                   color: Colors.red,
@@ -1032,8 +1028,7 @@ class TitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          const EdgeInsets.only(left: 25.0, right: 25, bottom: 15),
+      padding: const EdgeInsets.only(left: 25.0, right: 25, bottom: 15),
       child: Text(
         title,
         style: const TextStyle(
@@ -1148,16 +1143,17 @@ class Aminties extends StatelessWidget {
   const Aminties({
     Key? key,
     this.icon,
-    required this.title,
+    required this.title, required this.onTap,
   }) : super(key: key);
   final IconData? icon;
   final String title;
+  final VoidCallback onTap;
   @override
   Widget build(BuildContext context) {
     return OutlinedButton.icon(
       style: OutlinedButton.styleFrom(
         side: BorderSide(width: 1.0, color: Colors.teal),
-        shape:  RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
             side: BorderSide(
               color: Colors.teal,
             ),
@@ -1165,7 +1161,7 @@ class Aminties extends StatelessWidget {
         primary: Colors.black,
         //backgroundColor: Color.fromRGBO(64, 75, 96, .9),
       ),
-      onPressed: () {},
+      onPressed: onTap,
       label: Text(
         title,
         style: TextStyle(
