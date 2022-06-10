@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get_connect/http/src/multipart/multipart_file.dart';
 import 'package:http/http.dart' as http;
 import '../widget/card_widget_filter_page.dart';
 import 'package:filter_list/filter_list.dart';
