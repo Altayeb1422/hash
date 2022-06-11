@@ -60,8 +60,6 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
     // final fileSize = mb>= 1? mb.toStringAsFixed(2): kb.toStringAsFixed(2);
     //final extension = file.extension??'none';
     final  img = file.path;
-
-
     return InkWell(
       onTap: ()=> OpenFile.open(file.path),
       child: Container(
@@ -85,7 +83,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
   }
   Future<void> propertyMainUpload() async {
     var res = await http
-        .post(Uri.parse("http://192.168.15.116/easy/insert_ads.php"), body: {
+        .post(Uri.parse("http://192.168.1.41/easy/insert_ads.php"), body: {
       "Client_ID": "",
       "AdsCode": "",
       "Select2": widget.select2.toString(),
@@ -117,7 +115,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
 
 
   postingList(String service) async {
-    final uri = "http://192.168.15.116/easy/features.php";
+    final uri = "http://192.168.1.41/easy/features.php";
     data = {"Ads_Id": adsId.toString(), "Desc_Name": service};
     http.Response response = await http.post(
       Uri.parse(uri),
@@ -997,7 +995,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                     for (int i = 0; i <= length; i++){
                       await postImagesIds();
                       if(images[i] != null){
-                       await uploadmultipleimage(images[i]);
+                       await uploadMultipleImages(images[i]);
                       }
                     }
                     print(length);
