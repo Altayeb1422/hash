@@ -86,6 +86,10 @@ dependencies:
   dotted_border: ^2.0.0+2
   fdottedline: ^1.0.1
   dotted_decoration: ^2.0.0
+  image_picker: ^0.8.5
+  file_picker: ^4.5.1
+  open_file: ^3.2.1
+  path_provider: ^2.0.9
 
 
 

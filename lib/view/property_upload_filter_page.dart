@@ -1,12 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import '../images_page.dart';
+import '../services/image_upload_request.dart';
 import '../widget/card_widget_filter_page.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:open_file/open_file.dart';
+import 'package:file_picker/file_picker.dart';
+
+late File image1;
+late List<File> images = [];
+var adsId;
 
 TextEditingController titleController = TextEditingController();
 TextEditingController priceController = TextEditingController();
@@ -37,7 +47,42 @@ class PropertyUploadFilterPage extends StatefulWidget {
 }
 
 class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
-  var adsId;
+
+  final picker = ImagePicker();
+
+  void openFiles(List<PlatformFile> files) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => FilesPage(files: files, onOpenedFile: openFile)));
+  }
+  Widget buildFile(file) {
+    //final kb = file.size/1024;
+    // final mb = kb/1024;
+    // final fileSize = mb>= 1? mb.toStringAsFixed(2): kb.toStringAsFixed(2);
+    //final extension = file.extension??'none';
+    final  img = file.path;
+
+
+    return InkWell(
+      onTap: ()=> OpenFile.open(file.path),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(child:
+            Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Image.file(File(img!)),
+            )),
+          ],
+        ),
+      ),
+    );
+  }
   Future<void> propertyMainUpload() async {
     var res = await http
         .post(Uri.parse("http://192.168.15.116/easy/insert_ads.php"), body: {
@@ -69,6 +114,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
       debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
     }
   }
+
 
   postingList(String service) async {
     final uri = "http://192.168.15.116/easy/features.php";
@@ -200,8 +246,20 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
   ];
   String periodSelectedValue = "Month";
   String currencySelectedValue = "SDG";
+
+  Future choiceImage() async {
+    var pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      image1 = File(pickedImage!.path);
+    });
+  }
+
+  void openFile(PlatformFile file) {
+    OpenFile.open(file.path);
+  }
   @override
   Widget build(BuildContext context) {
+    int length = images.length-1;
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -273,17 +331,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
             ),
 
             TitleWidget(title: "Amenities".tr()),
-            // TextButton.icon(
-            //   onPressed: _openFilterDialog,
-            //   icon: Icon(Icons.add),
-            //   label: Text(
-            //     "Amenities",
-            //     style: TextStyle(color: Colors.black),
-            //   ),
-            //   // style: ButtonStyle(
-            //   //     backgroundColor: MaterialStateProperty.all(Colors.blue)),
-            //   // color: Colors.blue,
-            // ),
+
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20, bottom: 15),
               child: GridView.builder(
@@ -844,45 +892,91 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                     color: Colors.black),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 25.0, right: 25, top: 15),
-              child: Container(
-                  height: size.height * .2,
-                  decoration: DottedDecoration(
-                      shape: Shape.box,
-                      strokeWidth: 2,
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.teal),
-                  child: Center(
-                    child: Container(
-                      height: size.height,
-                      width: size.width,
-                      decoration: BoxDecoration(
+            InkWell(
+              onTap: () async {
+                final result = await FilePicker.platform
+                    .pickFiles(
+                    allowMultiple: true,
+                    type: FileType.custom,
+                    allowedExtensions: [
+                      "jpg",
+                      "png",
+                      "jpeg"
+                    ]);
+                if (result != null) {
+                  // Not sure if I should only get file path or complete data (this was in package documentation)
+                  List<File> files = result.paths
+                      .map((path) => File(path!))
+                      .toList();
+                  images = files;
+                } else {
+                  // User canceled the picker
+                }
+                //open single file
+                openFiles(result!.files);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(left: 25.0, right: 25, top: 15),
+                child: Container(
+                    height: size.height * .2,
+                    decoration: DottedDecoration(
+                        shape: Shape.box,
+                        strokeWidth: 2,
                         borderRadius: BorderRadius.circular(20),
-                        color: Colors.teal.withOpacity(0.07),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.add_photo_alternate_outlined,
-                            size: 50,
-                            color: Colors.teal,
+                        color: Colors.teal),
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Container(
+                            height: size.height,
+                            width: size.width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.teal.withOpacity(0.07),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.add_photo_alternate_outlined,
+                                  size: 50,
+                                  color: Colors.teal,
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Text(
+                                  'Upload Images',
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                              ],
+                            ),
                           ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            'Upload Images',
-                            style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )),
+                        ),
+                        Container(
+                          height: size.height * .2,
+                          decoration: DottedDecoration(
+                              shape: Shape.box,
+                              strokeWidth: 2,
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.teal),
+                          child: GridView.builder(
+                              padding: const EdgeInsets.all(6),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 4, ),
+                              itemCount: images.length,
+                              itemBuilder:(context, index){
+                                final file = images[index];
+                                return buildFile(file);
+                              }),
+                        ),
+
+                      ],
+                    )),
+              ),
             ),
             const SizedBox(
               height: 15,
@@ -894,9 +988,19 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                     await propertyMainUpload();
                     for (int i = 0; i <= selectedUserList!.length-1; i++){
                       if(selectedUserList![i].service! != null){
-                        postingList(selectedUserList![i].service!);
+                        await postingList(selectedUserList![i].service!);
+                      }
+                    };
+                    if(images.length > 5){
+                      length = 5;
+                    }
+                    for (int i = 0; i <= length; i++){
+                      await postImagesIds();
+                      if(images[i] != null){
+                       await uploadmultipleimage(images[i]);
                       }
                     }
+                    print(length);
                   },
                   elevation: 10,
                   color: Colors.red,
@@ -918,53 +1022,6 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class FilterPage extends StatelessWidget {
-  const FilterPage({Key? key, this.allTextList, this.selectedUserList})
-      : super(key: key);
-  final List<User>? allTextList;
-  final List<User>? selectedUserList;
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: FilterListWidget<User>(
-        themeData: FilterListThemeData(context),
-        hideSelectedTextCount: true,
-        listData: userList,
-        controlButtons: [ContolButtonType.All, ContolButtonType.Reset],
-        selectedListData: selectedUserList,
-        onApplyButtonClick: (list) {
-          Navigator.pop(context, list);
-        },
-        choiceChipLabel: (item) {
-          /// Used to print text on chip
-          return item!.service;
-        },
-        // choiceChipBuilder: (context, item, isSelected) {
-        //   return Container(
-        //     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        //     margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        //     decoration: BoxDecoration(
-        //         border: Border.all(
-        //       color: isSelected! ? Colors.blue[300]! : Colors.grey[300]!,
-        //     )),
-        //     child: Text(item.name),
-        //   );
-        // },
-        validateSelectedItem: (list, val) {
-          ///  identify if item is selected or not
-          return list!.contains(val);
-        },
-        onItemSearch: (user, query) {
-          /// When search query change in search bar then this method will be called
-          ///
-          /// Check if items contains query
-          return user.service!.toLowerCase().contains(query.toLowerCase());
-        },
       ),
     );
   }
