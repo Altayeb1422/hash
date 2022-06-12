@@ -14,15 +14,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:open_file/open_file.dart';
 import 'package:file_picker/file_picker.dart';
 
-late File propertyImage1;
-late List<File> PropertyImages = [];
+
 var adsId;
-
-TextEditingController titleController = TextEditingController();
-TextEditingController priceController = TextEditingController();
-TextEditingController spaceController = TextEditingController();
-TextEditingController descController = TextEditingController();
-
 class PropertyUploadFilterPage extends StatefulWidget {
   PropertyUploadFilterPage(
       {Key? key,
@@ -47,7 +40,14 @@ class PropertyUploadFilterPage extends StatefulWidget {
 }
 
 class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
+  late File propertyImage1;
+  late List<File> PropertyImages = [];
 
+
+  TextEditingController titleController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController spaceController = TextEditingController();
+  TextEditingController descController = TextEditingController();
   final picker = ImagePicker();
 
   void openFiles(List<PlatformFile> files) {
@@ -993,9 +993,8 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                       length = 5;
                     }
                     for (int i = 0; i <= length; i++){
-                      await postImagesIds();
                       if(PropertyImages[i] != null){
-                       await uploadMultipleImages(PropertyImages[i]);
+                       await uploadMultipleImages(PropertyImages[i],);
                       }
                     }
                     print(length);

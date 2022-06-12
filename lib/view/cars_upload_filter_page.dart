@@ -17,16 +17,7 @@ import 'package:dotted_decoration/dotted_decoration.dart';
 
 
 
-late File carsImage1;
-late List<File> carsImages = [];
-var adsId;
-
-TextEditingController carNameController = TextEditingController();
-TextEditingController carPriceController = TextEditingController();
-TextEditingController carModelController = TextEditingController();
-TextEditingController carColorController = TextEditingController();
-TextEditingController carDistanceController = TextEditingController();
-TextEditingController carDescController = TextEditingController();
+var carAdsId;
 
 class CarsUploadFilterPage extends StatefulWidget {
   CarsUploadFilterPage({Key? key, this.allTextList, this.selectedUserList,this.select2,
@@ -47,7 +38,17 @@ class CarsUploadFilterPage extends StatefulWidget {
 }
 
 class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
+  late File carsImage1;
+  late List<File> carsImages = [];
   final picker = ImagePicker();
+
+  TextEditingController carNameController = TextEditingController();
+  TextEditingController carPriceController = TextEditingController();
+  TextEditingController carModelController = TextEditingController();
+  TextEditingController carColorController = TextEditingController();
+  TextEditingController carDistanceController = TextEditingController();
+  TextEditingController carDescController = TextEditingController();
+
 
   void openFiles(List<PlatformFile> files) {
     Navigator.of(context).push(MaterialPageRoute(
@@ -80,6 +81,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
       ),
     );
   }
+
   Future<void> CarsMainUpload() async {
     var res = await http
         .post(Uri.parse("http://192.168.15.116/easy/car_ads.php"), body: {
@@ -107,7 +109,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
       print(res.body);
       print("Post sucessful"); //print raw response on console
       var data = json.decode(res.body);
-      adsId = data["AdsId"];
+      carAdsId = data["AdsId"];
       print(data["AdsId"]); //decoding json to array
     } else {
       debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
@@ -968,7 +970,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                     }
                     for (int i = 0; i <= length; i++){
                       if(carsImages[i] != null){
-                        await uploadMultipleImages(carsImages[i]);
+                        await uploadCarsImages(carsImages[i]);
                       }
                     }
                     print(length);

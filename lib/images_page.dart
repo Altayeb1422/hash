@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:hash/services/image_upload_request.dart';
-import 'package:hash/view/property_upload_filter_page.dart';
 
 
 class FilesPage extends StatefulWidget {
@@ -18,7 +16,6 @@ class _FilesPageState extends State<FilesPage> {
 
   @override
   Widget build(BuildContext context) {
-    int length = PropertyImages.length-1;
     return Scaffold(
       appBar: AppBar(
         title: Text('Images'),
@@ -27,17 +24,6 @@ class _FilesPageState extends State<FilesPage> {
       body: Center(
         child: Column(
           children: [
-            // Expanded(
-            //     child: ElevatedButton(onPressed: (){
-            //       if(images.length > 5){
-            //         length = 5;
-            //       }
-            //       for (int i = 0; i <= length; i++){
-            //         if(images[i] != null){
-            //           uploadmultipleimage(images[i]);
-            //         }
-            //       }
-            //       print(length);},child: Text("upload"),)),
             Expanded(
               child: GridView.builder(
                   padding: const EdgeInsets.all(6),
