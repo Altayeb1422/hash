@@ -5,6 +5,7 @@ import '../model/root.dart';
 import '../services/remote_services.dart';
 import '../view/property for sale/property_for_sale_types.dart';
 import '../widget/dubzill_card_design.dart';
+import 'cars/upload_cars_category.dart';
 
 class UploadProperty extends StatefulWidget {
    UploadProperty({Key? key, required this.adsCode}) : super(key: key);
@@ -71,6 +72,16 @@ class _UploadPropertyState extends State<UploadProperty> {
                         context,
                         MaterialPageRoute(
                             builder: (_) => UploadPropertyForRentCatigory(
+                              select1: tabs![index].id,
+                              select1Name: tabs![index].name,
+                            )));
+                  }else if (tabs![index].id == '3') {
+                    filterId.add(tabs![index].id);
+                    filterName.add(tabs![index].name);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => UploadCarsForSaleCategory(
                               select1: tabs![index].id,
                               select1Name: tabs![index].name,
                             )));

@@ -18,7 +18,7 @@ class _FilesPageState extends State<FilesPage> {
 
   @override
   Widget build(BuildContext context) {
-    int length = images.length-1;
+    int length = PropertyImages.length-1;
     return Scaffold(
       appBar: AppBar(
         title: Text('Images'),

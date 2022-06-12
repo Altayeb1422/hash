@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:hash/main.dart';
 import 'package:hash/services/remote_services.dart';
 import 'package:hash/view/motor_detailes.dart';
@@ -12,8 +11,6 @@ import 'package:hash/view/real_estate_card.dart';
 import 'package:hash/view/real_estate_detailes.dart';
 import 'package:hash/view/single_car_page.dart';
 import 'package:hash/view/single_property_page.dart';
-import 'package:hash/view/test.dart';
-import 'package:hash/view/property_upload_filter_page.dart';
 import 'package:hash/widget/dubzill_card_design.dart';
 import '../model/car_class.dart';
 import '../model/cars_card.dart';
@@ -22,6 +19,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../model/root.dart';
 import 'cars_upload_filter_page.dart';
 import 'motors/motors.dart';
+
 
 class HomeBody extends StatefulWidget {
   const HomeBody({Key? key}) : super(key: key);

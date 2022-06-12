@@ -3,19 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:hash/widget/filters_card_widget_no_sub.dart';
 import '../../model/child.dart';
 import '../../services/child_remote_services.dart';
-import '../../view/property_upload_filter_page.dart';
+import '../../view/cars_upload_filter_page.dart';
+import '../../view/motors/CarCardWidget.dart';
 
-class UploadPropertyForRentTypes extends StatefulWidget {
-    const UploadPropertyForRentTypes({Key? key, required this.select1, required this.select2, this.select2Name}) : super(key: key);
+class UploadCarsForSaleTypes extends StatefulWidget {
+  const UploadCarsForSaleTypes({Key? key, required this.select1, required this.select2, this.select2Name}) : super(key: key);
   final dynamic select1;
   final dynamic select2;
   final dynamic select2Name;
   @override
-  _UploadPropertyForRentTypesState createState() =>
-      _UploadPropertyForRentTypesState();
+  _UploadCarsForSaleTypesState createState() =>
+      _UploadCarsForSaleTypesState();
 }
 
-class _UploadPropertyForRentTypesState extends State<UploadPropertyForRentTypes> {
+class _UploadCarsForSaleTypesState extends State<UploadCarsForSaleTypes> {
   List<FilterTabs>? filterTabs;
   var isLoaded = false;
 
@@ -58,14 +59,14 @@ class _UploadPropertyForRentTypesState extends State<UploadPropertyForRentTypes>
             child: ListView.builder(
               itemCount: filterTabs?.length,
               itemBuilder: (BuildContext context, int index) {
-                return CardWidgetNoSub(
+                return CarsCardWidget(
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) =>  PropertyUploadFilterPage(select2:widget.select1, select3: widget.select2, select4: filterTabs![index].id, select1Name: widget.select2Name, select2Name: filterTabs![index].name,)));
+                            builder: (_) =>  CarsUploadFilterPage(select2:widget.select1, select3: widget.select2, select4: filterTabs![index].id, select1Name: widget.select2Name, select2Name: filterTabs![index].name,)));
                   },
-                  title: filterTabs![index].name,
+                  title: filterTabs![index].name, logo: filterTabs![index].icon,
                 );
               },
             ),

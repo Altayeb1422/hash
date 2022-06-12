@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:hash/view/history.dart';
 import 'package:hash/view/home_body.dart';
-import '../upload/upload_property.dart';
+import '../upload/Root_Upload.dart';
 import '../view/search.dart';
 import '../view/user.dart';
 import 'dart:math' as math;

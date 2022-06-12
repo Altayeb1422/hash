@@ -14,8 +14,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:open_file/open_file.dart';
 import 'package:file_picker/file_picker.dart';
 
-late File image1;
-late List<File> images = [];
+late File propertyImage1;
+late List<File> PropertyImages = [];
 var adsId;
 
 TextEditingController titleController = TextEditingController();
@@ -83,7 +83,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
   }
   Future<void> propertyMainUpload() async {
     var res = await http
-        .post(Uri.parse("http://192.168.1.41/easy/insert_ads.php"), body: {
+        .post(Uri.parse("http://192.168.15.116/easy/insert_ads.php"), body: {
       "Client_ID": "",
       "AdsCode": "",
       "Select2": widget.select2.toString(),
@@ -115,7 +115,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
 
 
   postingList(String service) async {
-    final uri = "http://192.168.1.41/easy/features.php";
+    final uri = "http://192.168.15.116/easy/features.php";
     data = {"Ads_Id": adsId.toString(), "Desc_Name": service};
     http.Response response = await http.post(
       Uri.parse(uri),
@@ -248,7 +248,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
   Future choiceImage() async {
     var pickedImage = await picker.pickImage(source: ImageSource.gallery);
     setState(() {
-      image1 = File(pickedImage!.path);
+      propertyImage1 = File(pickedImage!.path);
     });
   }
 
@@ -257,7 +257,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
   }
   @override
   Widget build(BuildContext context) {
-    int length = images.length-1;
+    int length = PropertyImages.length-1;
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -906,7 +906,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                   List<File> files = result.paths
                       .map((path) => File(path!))
                       .toList();
-                  images = files;
+                  PropertyImages = files;
                 } else {
                   // User canceled the picker
                 }
@@ -965,9 +965,9 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                               padding: const EdgeInsets.all(6),
                               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 4, ),
-                              itemCount: images.length,
+                              itemCount: PropertyImages.length,
                               itemBuilder:(context, index){
-                                final file = images[index];
+                                final file = PropertyImages[index];
                                 return buildFile(file);
                               }),
                         ),
@@ -989,13 +989,13 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
                         await postingList(selectedUserList![i].service!);
                       }
                     };
-                    if(images.length > 5){
+                    if(PropertyImages.length > 5){
                       length = 5;
                     }
                     for (int i = 0; i <= length; i++){
                       await postImagesIds();
-                      if(images[i] != null){
-                       await uploadMultipleImages(images[i]);
+                      if(PropertyImages[i] != null){
+                       await uploadMultipleImages(PropertyImages[i]);
                       }
                     }
                     print(length);

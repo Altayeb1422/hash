@@ -1,21 +1,21 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:hash/widget/filters_card_widget_no_sub.dart';
+import 'package:hash/upload/cars/upload_cars_type.dart';
 import '../../model/child.dart';
 import '../../services/child_remote_services.dart';
-import '../../view/property_upload_filter_page.dart';
+import '../../widget/filters_card_widget.dart';
 
-class UploadPropertyForRentTypes extends StatefulWidget {
-    const UploadPropertyForRentTypes({Key? key, required this.select1, required this.select2, this.select2Name}) : super(key: key);
+class UploadCarsForSaleCategory extends StatefulWidget {
+  const UploadCarsForSaleCategory({Key? key, this.select1, this.select1Name}) : super(key: key);
   final dynamic select1;
-  final dynamic select2;
-  final dynamic select2Name;
+  final dynamic select1Name;
   @override
-  _UploadPropertyForRentTypesState createState() =>
-      _UploadPropertyForRentTypesState();
+  _UploadCarsForSaleCategoryState createState() =>
+      _UploadCarsForSaleCategoryState();
 }
 
-class _UploadPropertyForRentTypesState extends State<UploadPropertyForRentTypes> {
+class _UploadCarsForSaleCategoryState
+    extends State<UploadCarsForSaleCategory> {
   List<FilterTabs>? filterTabs;
   var isLoaded = false;
 
@@ -26,7 +26,7 @@ class _UploadPropertyForRentTypesState extends State<UploadPropertyForRentTypes>
   }
 
   getChildData() async {
-    filterTabs = await ChildRemoteService().postParentId(widget.select2);
+    filterTabs = await ChildRemoteService().postParentId(widget.select1);
     if (filterTabs != null) {
       setState(() {
         isLoaded = true;
@@ -36,8 +36,7 @@ class _UploadPropertyForRentTypesState extends State<UploadPropertyForRentTypes>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
@@ -58,14 +57,19 @@ class _UploadPropertyForRentTypesState extends State<UploadPropertyForRentTypes>
             child: ListView.builder(
               itemCount: filterTabs?.length,
               itemBuilder: (BuildContext context, int index) {
-                return CardWidgetNoSub(
+                return CardWidget(
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) =>  PropertyUploadFilterPage(select2:widget.select1, select3: widget.select2, select4: filterTabs![index].id, select1Name: widget.select2Name, select2Name: filterTabs![index].name,)));
+                            builder: (_) => UploadCarsForSaleTypes(
+                              select2: filterTabs![index].id,select2Name:filterTabs![index].name,
+                              select1: widget.select1,
+                            )));
                   },
+                  icon: Icons.directions_car,
                   title: filterTabs![index].name,
+                  subtitle: "BYD",
                 );
               },
             ),
@@ -73,8 +77,6 @@ class _UploadPropertyForRentTypesState extends State<UploadPropertyForRentTypes>
               child: CircularProgressIndicator(),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

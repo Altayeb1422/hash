@@ -1,22 +1,134 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:http/http.dart' as http;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:open_file/open_file.dart';
+import '../images_page.dart';
+import '../services/image_upload_request.dart';
 import '../widget/card_widget_filter_page.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 
+
+
+late File carsImage1;
+late List<File> carsImages = [];
+var adsId;
+
+TextEditingController carNameController = TextEditingController();
+TextEditingController carPriceController = TextEditingController();
+TextEditingController carModelController = TextEditingController();
+TextEditingController carColorController = TextEditingController();
+TextEditingController carDistanceController = TextEditingController();
+TextEditingController carDescController = TextEditingController();
+
 class CarsUploadFilterPage extends StatefulWidget {
-  CarsUploadFilterPage({Key? key, this.allTextList, this.selectedUserList})
+  CarsUploadFilterPage({Key? key, this.allTextList, this.selectedUserList,this.select2,
+    this.select3,
+    this.select4,
+    this.select2Name,
+    this.select1Name})
       : super(key: key);
   final List<User>? allTextList;
   final List<User>? selectedUserList;
+  final dynamic select2;
+  final dynamic select3;
+  final dynamic select4;
+  final dynamic select2Name;
+  final dynamic select1Name;
   @override
   _CarsUploadFilterPageState createState() => _CarsUploadFilterPageState();
 }
 
 class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
+  final picker = ImagePicker();
+
+  void openFiles(List<PlatformFile> files) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => FilesPage(files: files, onOpenedFile: openFile)));
+  }
+  Widget buildFile(file) {
+    //final kb = file.size/1024;
+    // final mb = kb/1024;
+    // final fileSize = mb>= 1? mb.toStringAsFixed(2): kb.toStringAsFixed(2);
+    //final extension = file.extension??'none';
+    final  img = file.path;
+    return InkWell(
+      onTap: ()=> OpenFile.open(file.path),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(child:
+            Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Image.file(File(img!)),
+            )),
+          ],
+        ),
+      ),
+    );
+  }
+  Future<void> CarsMainUpload() async {
+    var res = await http
+        .post(Uri.parse("http://192.168.15.116/easy/car_ads.php"), body: {
+      "Client_ID": "",
+      "AdsCode": "",
+      "Select2": widget.select2.toString(),
+      "Select3": widget.select3.toString(),
+      "Select4": widget.select4.toString(),
+      "Title" : carNameController.text,
+      "Price" : carPriceController.text,
+      "Currency" : selectedCurrencyValue.toString(),
+      "Seats" : _seats.toString(),
+      "Engine" : _cylinders.toString(),
+      "Model" : carModelController.text,
+      "Color" : carColorController.text,
+      "Distance" : carDistanceController.text,
+      "Fuel" : fuelSelectedValue.toString(),
+      "Condition" : conditionSelectedValue.toString(),
+      "GeneralDescription" : carDescController.text,
+      "CityName" : "Kh",
+      "AreaName" : "",
+    }); //sending post request with header data
+
+    if (res.statusCode == 200) {
+      print(res.body);
+      print("Post sucessful"); //print raw response on console
+      var data = json.decode(res.body);
+      adsId = data["AdsId"];
+      print(data["AdsId"]); //decoding json to array
+    } else {
+      debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
+    }
+  }
+
+
+  // postingList(String service) async {
+  //   final uri = "http://192.168.15.116/easy/features.php";
+  //   data = {"Ads_Id": adsId.toString(), "Desc_Name": service};
+  //   http.Response response = await http.post(
+  //     Uri.parse(uri),
+  //     body: data,
+  //   );
+  //   if (response.statusCode == 200) {
+  //     //show your outputs
+  //     print(selectedUserList!.toString());
+  //   } else {
+  //     Fluttertoast.showToast(msg: "“Error Occurred”", timeInSecForIosWeb: 25);
+  //   }
+  // }
   String? valueChoose;
   int tag = 1;
   List<User>? selectedUserList = [];
@@ -70,96 +182,77 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
       },*/
     );
   }
+  List<DropdownMenuItem<String>> menuItems = [
+    DropdownMenuItem(
+        child: Text(
+          "USD",
+          style: const TextStyle(
+              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        value: "USD"),
+    DropdownMenuItem(
+        child: Text(
+          "SDG",
+          style: const TextStyle(
+              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        value: "SDG"),
+  ];
+  List<DropdownMenuItem<String>> fuel = [
+    DropdownMenuItem(
+        child: Text(
+          "Gasoline",
+          style: const TextStyle(
+              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        value: "Gasoline"),
+    DropdownMenuItem(
+        child: Text(
+          "Diesel",
+          style: const TextStyle(
+              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        value: "Diesel"),
+  ];
+  List<DropdownMenuItem<String>> condition = [
+    DropdownMenuItem(
+        child: Text(
+          "New",
+          style: const TextStyle(
+              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        value: "New"),
+    DropdownMenuItem(
+        child: Text(
+          "Used",
+          style: const TextStyle(
+              fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        value: "Used"),
+  ];
+  String selectedCurrencyValue = "SDG";
+  String fuelSelectedValue = "Gasoline";
+  String conditionSelectedValue = "Used";
 
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<MyCustomFormState>.
   final formKey = GlobalKey<FormState>();
   late List<String> formValue;
-  // final _formKey = GlobalKey<FormState>();
-  // final _openDropDownProgKey = GlobalKey<DropdownSearchState<String>>();
-  // final _multiKey = GlobalKey<DropdownSearchState<String>>();
-  // Future<void> sendData() async {
-  //   var res = await http.post(Uri.parse("http://192.168.15.100/easy/insert_ads.php"), body: {
-  //     "Select2": widget.select2,
-  //     "Select3": widget.select3,
-  //     "Select4": widget.select4,
-  //     "Date": DateTime.now().toString(),
-  //     "AdsCode": 'RS01',
-  //     "Space": 123.toString(),
-  //     "CityName": 'Khartoum'
-  //
-  // //   }); //sending post request with header data
-  //
-  //   if(res.statusCode == 200){
-  //     debugPrint("Data posted successfully");
-  //     print(res.body);
-  //     //json.decode(res.body);
-  //     var jason = res.body;
-  //   }else{
-  //     debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
-  //   }
-  // }
   late Timer _timer;
-  var _rooms = 0;
-  var _bathrooms = 0;
+  var _seats = 0;
+  var _cylinders = 0;
+  Future choiceImage() async {
+    var pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      carsImage1 = File(pickedImage!.path);
+    });
+  }
+
+  void openFile(PlatformFile file) {
+    OpenFile.open(file.path);
+  }
   @override
   Widget build(BuildContext context) {
-    List<DropdownMenuItem<String>> menuItems = [
-      DropdownMenuItem(
-          child: Text(
-            "USD",
-            style: const TextStyle(
-                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          value: "USD"),
-      DropdownMenuItem(
-          child: Text(
-            "SDG",
-            style: const TextStyle(
-                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          value: "SDG"),
-    ];
-    List<DropdownMenuItem<String>> fuel = [
-      DropdownMenuItem(
-          child: Text(
-            "Gasoline",
-            style: const TextStyle(
-                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          value: "Gasoline"),
-      DropdownMenuItem(
-          child: Text(
-            "Diesel",
-            style: const TextStyle(
-                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          value: "Diesel"),
-    ];
-    List<DropdownMenuItem<String>> condition = [
-      DropdownMenuItem(
-          child: Text(
-            "New",
-            style: const TextStyle(
-                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          value: "New"),
-      DropdownMenuItem(
-          child: Text(
-            "Used",
-            style: const TextStyle(
-                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          value: "Used"),
-    ];
-    String selectedValue = "SDG";
-    String fuelSelectedValue = "Gasoline";
-    String conditionSelectedValue = "Used";
+    int length = carsImages.length-1;
     Size size = MediaQuery.of(context).size;
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -180,8 +273,8 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
           // mainAxisAlignment: MainAxisAlignment.start,
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CardWidgetFilterPage(title: 'Category', onTap: () {}, choice: ""),
-            CardWidgetFilterPage(title: "type".tr(), onTap: () {}, choice: "k"),
+            CardWidgetFilterPage(title: 'Category', onTap: () {}, choice: widget.select1Name),
+            CardWidgetFilterPage(title: "type".tr(), onTap: () {}, choice: widget.select2Name),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -206,6 +299,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                     height: size.height * .1,
                     width: size.width * .7,
                     child: TextFormField(
+                      controller: carNameController,
                       decoration: InputDecoration(
                         icon: Icon(
                           Icons.directions_car_outlined,
@@ -270,6 +364,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                     height: size.height * .1,
                     width: size.width * .4,
                     child: TextFormField(
+                      controller: carPriceController,
                       decoration: InputDecoration(
                         icon: Icon(
                           Icons.payments_outlined,
@@ -284,10 +379,10 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                   child: DropdownButtonFormField(
                     iconEnabledColor: Colors.teal,
                     items: menuItems,
-                    value: selectedValue,
+                    value: selectedCurrencyValue,
                     onChanged: (String? newValue) {
                       setState(() {
-                        selectedValue = newValue!;
+                        selectedCurrencyValue = newValue!;
                       });
                     },
                   ),
@@ -317,7 +412,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                     ),
                     const SizedBox(height: 10.0),
                     Text(
-                      "$_rooms",
+                      "$_seats",
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -346,7 +441,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                           ),
                           onTap: () {
                             setState(() {
-                              if (_rooms > 0) _rooms--;
+                              if (_seats > 0) _seats--;
                             });
                           },
                           onTapDown: (TapDownDetails details) {
@@ -354,9 +449,9 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                             _timer = Timer.periodic(Duration(milliseconds: 100),
                                 (t) {
                               setState(() {
-                                if (_rooms > 0) _rooms--;
+                                if (_seats > 0) _seats--;
                               });
-                              print('value $_rooms');
+                              print('value $_seats');
                             });
                           },
                           onTapUp: (TapUpDetails details) {
@@ -387,7 +482,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                           ),
                           onTap: () {
                             setState(() {
-                              _rooms++;
+                              _seats++;
                             });
                           },
                           onTapDown: (TapDownDetails details) {
@@ -395,9 +490,9 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                             _timer = Timer.periodic(Duration(milliseconds: 100),
                                 (t) {
                               setState(() {
-                                _rooms++;
+                                _seats++;
                               });
-                              print('value $_rooms');
+                              print('value $_seats');
                             });
                           },
                           onTapUp: (TapUpDetails details) {
@@ -438,7 +533,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                     ),
                     const SizedBox(height: 10.0),
                     Text(
-                      "$_bathrooms",
+                      "$_cylinders",
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -467,7 +562,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                           ),
                           onTap: () {
                             setState(() {
-                              if (_bathrooms > 0) _bathrooms--;
+                              if (_cylinders > 0) _cylinders--;
                             });
                           },
                           onTapDown: (TapDownDetails details) {
@@ -475,9 +570,9 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                             _timer = Timer.periodic(Duration(milliseconds: 100),
                                 (t) {
                               setState(() {
-                                if (_bathrooms > 0) _bathrooms--;
+                                if (_cylinders > 0) _cylinders--;
                               });
-                              print('value $_bathrooms');
+                              print('value $_cylinders');
                             });
                           },
                           onTapUp: (TapUpDetails details) {
@@ -508,7 +603,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                           ),
                           onTap: () {
                             setState(() {
-                              _bathrooms++;
+                              _cylinders++;
                             });
                           },
                           onTapDown: (TapDownDetails details) {
@@ -516,9 +611,9 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                             _timer = Timer.periodic(Duration(milliseconds: 100),
                                 (t) {
                               setState(() {
-                                _bathrooms++;
+                                _cylinders++;
                               });
-                              print('value $_bathrooms');
+                              print('value $_cylinders');
                             });
                           },
                           onTapUp: (TapUpDetails details) {
@@ -553,6 +648,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                   height: size.height * .1,
                   width: size.width * .25,
                   child: TextFormField(
+                    controller: carModelController,
                     decoration: InputDecoration(
                       hintText: "2017",
                       hintStyle: TextStyle(
@@ -583,6 +679,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                   height: size.height * .1,
                   width: size.width * .25,
                   child: TextFormField(
+                    controller: carColorController,
                     decoration: InputDecoration(
                       hintText: "White",
                       hintStyle: TextStyle(
@@ -616,6 +713,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                       height: size.height * .1,
                       width: size.width * .25,
                       child: TextFormField(
+                        controller: carDistanceController,
                         decoration: InputDecoration(
                           hintText: "85,000",
                           hintStyle: TextStyle(
@@ -735,6 +833,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
             Padding(
               padding: const EdgeInsets.only(left: 25.0, right: 25, top: 15),
               child: TextField(
+                controller: carDescController,
                 maxLines: 10,
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
@@ -765,45 +864,91 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                     color: Colors.black),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 25.0, right: 25, top: 15),
-              child: Container(
-                  height: size.height * .2,
-                  decoration: DottedDecoration(
-                      shape: Shape.box,
-                      strokeWidth: 2,
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.teal),
-                  child: Center(
-                    child: Container(
-                      height: size.height,
-                      width: size.width,
-                      decoration: BoxDecoration(
+            InkWell(
+              onTap: () async {
+                final result = await FilePicker.platform
+                    .pickFiles(
+                    allowMultiple: true,
+                    type: FileType.custom,
+                    allowedExtensions: [
+                      "jpg",
+                      "png",
+                      "jpeg"
+                    ]);
+                if (result != null) {
+                  // Not sure if I should only get file path or complete data (this was in package documentation)
+                  List<File> files = result.paths
+                      .map((path) => File(path!))
+                      .toList();
+                  carsImages = files;
+                } else {
+                  // User canceled the picker
+                }
+                //open single file
+                openFiles(result!.files);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(left: 25.0, right: 25, top: 15),
+                child: Container(
+                    height: size.height * .2,
+                    decoration: DottedDecoration(
+                        shape: Shape.box,
+                        strokeWidth: 2,
                         borderRadius: BorderRadius.circular(20),
-                        color: Colors.teal.withOpacity(0.07),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.add_photo_alternate_outlined,
-                            size: 50,
-                            color: Colors.teal,
+                        color: Colors.teal),
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Container(
+                            height: size.height,
+                            width: size.width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.teal.withOpacity(0.07),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.add_photo_alternate_outlined,
+                                  size: 50,
+                                  color: Colors.teal,
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Text(
+                                  'Upload Images',
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                              ],
+                            ),
                           ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            'Upload Images',
-                            style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                        ],
-                      ),
+                        ),
+                        Container(
+                          height: size.height * .2,
+                          decoration: DottedDecoration(
+                              shape: Shape.box,
+                              strokeWidth: 2,
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.teal),
+                          child: GridView.builder(
+                              padding: const EdgeInsets.all(6),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 4, ),
+                              itemCount: carsImages.length,
+                              itemBuilder:(context, index){
+                                final file = carsImages[index];
+                                return buildFile(file);
+                              }),
+                        ),
+                      ],
                     ),
-                  )),
+                ),
+              ),
             ),
             const SizedBox(
               height: 15,
@@ -811,7 +956,23 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: MaterialButton(
-                  onPressed: () async {},
+                  onPressed: () async {
+                    await CarsMainUpload();
+                    for (int i = 0; i <= selectedUserList!.length-1; i++){
+                      // if(selectedUserList![i].service! != null){
+                      //   await postingList(selectedUserList![i].service!);
+                      // }
+                    };
+                    if(carsImages.length > 5){
+                      length = 5;
+                    }
+                    for (int i = 0; i <= length; i++){
+                      if(carsImages[i] != null){
+                        await uploadMultipleImages(carsImages[i]);
+                      }
+                    }
+                    print(length);
+                  },
                   elevation: 10,
                   color: Colors.red,
                   shape: RoundedRectangleBorder(
@@ -837,100 +998,6 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
   }
 }
 
-class FilterPage extends StatelessWidget {
-  const FilterPage({Key? key, this.allTextList, this.selectedUserList})
-      : super(key: key);
-  final List<User>? allTextList;
-  final List<User>? selectedUserList;
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: FilterListWidget<User>(
-        themeData: FilterListThemeData(context),
-        hideSelectedTextCount: true,
-        listData: userList,
-        controlButtons: [ContolButtonType.All, ContolButtonType.Reset],
-        selectedListData: selectedUserList,
-        onApplyButtonClick: (list) {
-          Navigator.pop(context, list);
-        },
-        choiceChipLabel: (item) {
-          /// Used to print text on chip
-          return item!.name;
-        },
-        // choiceChipBuilder: (context, item, isSelected) {
-        //   return Container(
-        //     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        //     margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        //     decoration: BoxDecoration(
-        //         border: Border.all(
-        //       color: isSelected! ? Colors.blue[300]! : Colors.grey[300]!,
-        //     )),
-        //     child: Text(item.name),
-        //   );
-        // },
-        validateSelectedItem: (list, val) {
-          ///  identify if item is selected or not
-          return list!.contains(val);
-        },
-        onItemSearch: (user, query) {
-          /// When search query change in search bar then this method will be called
-          ///
-          /// Check if items contains query
-          return user.name!.toLowerCase().contains(query.toLowerCase());
-        },
-      ),
-    );
-  }
-}
-
-class MaxMinBoxes extends StatelessWidget {
-  const MaxMinBoxes({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                isDense: true,
-                hintText: "min".tr(),
-                contentPadding: const EdgeInsets.all(18.0),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(color: Colors.redAccent)),
-              ),
-            ),
-          ),
-          // const SizedBox(
-          //   width: 25,
-          // ),
-          // Expanded(
-          //   child: TextField(
-          //     decoration: InputDecoration(
-          //       isDense: true,
-          //       hintText: "max".tr(),
-          //       contentPadding: const EdgeInsets.all(18.0),
-          //       filled: true,
-          //       fillColor: Colors.white,
-          //       border: OutlineInputBorder(
-          //           borderRadius: BorderRadius.circular(10.0),
-          //           borderSide: const BorderSide(color: Colors.redAccent)),
-          //     ),
-          //   ),
-          // ),
-        ],
-      ),
-    );
-  }
-}
 
 class TitleWidget extends StatelessWidget {
   const TitleWidget({
