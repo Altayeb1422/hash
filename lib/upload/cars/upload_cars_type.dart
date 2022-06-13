@@ -64,7 +64,7 @@ class _UploadCarsForSaleTypesState extends State<UploadCarsForSaleTypes> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) =>  CarsUploadFilterPage(select2:widget.select1, select3: widget.select2, select4: filterTabs![index].id, select1Name: widget.select2Name, select2Name: filterTabs![index].name,)));
+                            builder: (_) =>  CarsUploadFilterPage(select2:widget.select1, select3: widget.select2, select4: filterTabs![index].id, select2Name: widget.select2Name, select1Name: filterTabs![index].name,)));
                   },
                   title: filterTabs![index].name, logo: filterTabs![index].icon,
                 );

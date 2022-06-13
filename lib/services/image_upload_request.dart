@@ -33,6 +33,8 @@ Future uploadMultipleImages(File img,) async {
   });
 
 }
+
+
 Future uploadCarsImages(File img) async {
 
   var uri = Uri.parse("http://192.168.15.116/easy/upload_cars_images.php?Ads_Id="+carAdsId.toString()+"&Client_ID="+89.toString()); //sending post request with header data
@@ -57,17 +59,4 @@ Future uploadCarsImages(File img) async {
     print(value);
   });
 
-}
-postImagesIds() async {
-  final uri = "http://192.168.1.41/easy/upload_file.php";
-  http.Response response = await http.post(
-    Uri.parse(uri),
-    body: {"Ads_Id": adsId.toString(),"Client_ID":"hi".toString()},
-  );
-  if (response.statusCode == 200) {
-    //showa your outputs
-    print(adsId.toString());
-  } else {
-    print("Error ${response.statusCode}");
-  }
 }

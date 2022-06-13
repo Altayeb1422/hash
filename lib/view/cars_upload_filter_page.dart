@@ -14,7 +14,7 @@ import '../services/image_upload_request.dart';
 import '../widget/card_widget_filter_page.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
-
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 
 
 var carAdsId;
@@ -85,8 +85,8 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
   Future<void> CarsMainUpload() async {
     var res = await http
         .post(Uri.parse("http://192.168.15.116/easy/car_ads.php"), body: {
-      "Client_ID": "",
-      "AdsCode": "",
+      "Client_ID": "".toString(),
+      "AdsCode": "".toString(),
       "Select2": widget.select2.toString(),
       "Select3": widget.select3.toString(),
       "Select4": widget.select4.toString(),
@@ -99,7 +99,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
       "Color" : carColorController.text,
       "Distance" : carDistanceController.text,
       "Fuel" : fuelSelectedValue.toString(),
-      "Condition" : conditionSelectedValue.toString(),
+      "State" : conditionSelectedValue.toString(),
       "GeneralDescription" : carDescController.text,
       "CityName" : "Kh",
       "AreaName" : "",
@@ -107,7 +107,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
 
     if (res.statusCode == 200) {
       print(res.body);
-      print("Post sucessful"); //print raw response on console
+      print("Post successful"); //print raw response on console
       var data = json.decode(res.body);
       carAdsId = data["AdsId"];
       print(data["AdsId"]); //decoding json to array
@@ -116,21 +116,6 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
     }
   }
 
-
-  // postingList(String service) async {
-  //   final uri = "http://192.168.15.116/easy/features.php";
-  //   data = {"Ads_Id": adsId.toString(), "Desc_Name": service};
-  //   http.Response response = await http.post(
-  //     Uri.parse(uri),
-  //     body: data,
-  //   );
-  //   if (response.statusCode == 200) {
-  //     //show your outputs
-  //     print(selectedUserList!.toString());
-  //   } else {
-  //     Fluttertoast.showToast(msg: "“Error Occurred”", timeInSecForIosWeb: 25);
-  //   }
-  // }
   String? valueChoose;
   int tag = 1;
   List<User>? selectedUserList = [];
@@ -959,16 +944,24 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
               padding: const EdgeInsets.all(10.0),
               child: MaterialButton(
                   onPressed: () async {
+                    ProgressDialog pd = ProgressDialog(context: context);
+                    pd.show(
+                      //hideValue: true,
+                      progressType: ProgressType.normal,
+                      barrierDismissible: true,
+                      max: length,
+                      msg: 'File Uploading...',
+                      completed:
+                      // Completed values can be customized
+                      Completed(completedMsg: "Downloading Done !"),
+                      progressBgColor: Colors.transparent,
+                    );
                     await CarsMainUpload();
-                    for (int i = 0; i <= selectedUserList!.length-1; i++){
-                      // if(selectedUserList![i].service! != null){
-                      //   await postingList(selectedUserList![i].service!);
-                      // }
-                    };
                     if(carsImages.length > 5){
                       length = 5;
                     }
                     for (int i = 0; i <= length; i++){
+                      pd.update(value: i, msg: 'File uploading...');
                       if(carsImages[i] != null){
                         await uploadCarsImages(carsImages[i]);
                       }

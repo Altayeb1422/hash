@@ -37,7 +37,7 @@ class CarsCardWidget extends StatelessWidget {
                       border: Border(
                           right: BorderSide(
                               width: 1.0, color: Colors.white24))),
-                  child: SvgPicture.asset(
+                  child: SvgPicture.network(
                       logo,
                   ),
                 ),
