@@ -1,6 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import '../model/property_card_view_model.dart';
+import '../services/property_card_http_request.dart';
 import 'filter_page_for_the_rest.dart';
+
+
+final DateTime now = DateTime.now();
+final DateFormat formatter = DateFormat('yyyy-MM-dd');
+final String formatted = formatter.format(now);
 
 
 class History extends StatefulWidget {
@@ -11,6 +19,24 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
+  List<PropertyCardView>? card;
+  var isLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getData() async {
+    card = await HistoryViewCard().propertyCardView();
+    if (card != null  ) {
+      setState(() {
+        isLoaded = true;
+      });
+    }
+  }
+
   late bool active = true;
   void toggle() {
     setState(() {
@@ -22,40 +48,30 @@ class _HistoryState extends State<History> {
   Widget build(BuildContext context) {
     //Size size = MediaQuery.of(context).size;
     return SafeArea(
-      child: ListView(
-        physics: BouncingScrollPhysics(),
-        padding: EdgeInsets.only(top: 50),
-        //crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
-            child: Text(
-              "History",
-              style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            ),
-          ),
-          HistoryCarsCard(
-            location: 'Bahri-Crane',
-            title: 'Lancer',
-            price: "9,800,000 SDG",
-            img: 'assets/sedan 1.jpg',
-            logo: 'assets/cars/mitsubishi.svg',
-            active: active,
-            onTap: () => toggle(),
-          ),
-          HistoryPropertyCard(
-            onTap: () => toggle(),
-            active: active,
-            price: '100,000 USD',
-            img: 'assets/apart 1.jpg',
-            listing: '',
-            location: '',
-            title: '3rd floor Apartment',
-          ),
-        ],
+      child: Visibility(
+        replacement: const Center(
+          child: CircularProgressIndicator(),
+        ),
+        visible: isLoaded,
+        child: ListView.builder(
+          physics: BouncingScrollPhysics(),
+          padding: EdgeInsets.only(top: 50),
+          //crossAxisAlignment: CrossAxisAlignment.start,
+          itemCount: card?.length,
+          itemBuilder: (BuildContext context, int index) {
+            return HistoryCarsCard(
+              location: card![index].areaName.toString(),
+              title: card![index].titel.toString(),
+              price: card![index].price.toString(),
+              img: card![index].fronPhoto.toString(),
+              logo: 'assets/cars/mitsubishi.svg',
+              active: active,
+              onTap: () => toggle(),
+              date: card![index].date.toString(),
+              view: card![index].seen.toString(),
+            );
+          },
+        ),
       ),
     );
   }
@@ -71,12 +87,16 @@ class HistoryCarsCard extends StatefulWidget {
     required this.logo,
     required this.active,
     required this.onTap,
+    required this.date,
+    required this.view,
   }) : super(key: key);
   final String img;
   final String title;
   final String location;
   final String price;
   final String logo;
+  final String date;
+  final String view;
   final bool active;
   final VoidCallback onTap;
 
@@ -115,12 +135,13 @@ class _HistoryCarsCardState extends State<HistoryCarsCard> {
                         blurRadius: 12.0, color: Colors.grey.withOpacity(0.5))
                   ],
                   image: DecorationImage(
-                    image: AssetImage(
-                      widget.img,
+                    image: NetworkImage(
+                      "http://192.168.15.122/easy/image/${widget.img}",
                     ),
                     fit: BoxFit.cover,
                   ),
                 ),
+
               ),
               SizedBox(
                 width: 10,
@@ -169,7 +190,7 @@ class _HistoryCarsCardState extends State<HistoryCarsCard> {
                         height: 15,
                       ),
                       Text(
-                        "Uploaded: 14-jan-2022",
+                        "Date: ${formatted}",
                         style: TextStyle(
                             fontSize: 18,
                             color: Colors.black,
@@ -213,7 +234,7 @@ class _HistoryCarsCardState extends State<HistoryCarsCard> {
                         children: [
                           EditDelete(
                             onTap: () {},
-                            title: '200',
+                            title: widget.view,
                             icon: Icons.remove_red_eye,
                             iconColor: Colors.teal,
                           ),
@@ -447,7 +468,18 @@ class _HistoryPropertyCardState extends State<HistoryPropertyCard> {
                       Row(
                         children: [
                           EditDelete(
-                            onTap: () {Navigator.push(context, MaterialPageRoute(builder: (Context)=>FilterPageTheRest(select1Name: 'mm',select2: 'scdf',select2Name: "ghjk",select3: 'ghjk',select4: 'hjkl;',) ));},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (Context) => FilterPageTheRest(
+                                            select1Name: 'mm',
+                                            select2: 'scdf',
+                                            select2Name: "ghjk",
+                                            select3: 'ghjk',
+                                            select4: 'hjkl;',
+                                          )));
+                            },
                             title: 'Edit',
                             icon: Icons.edit,
                             iconColor: Colors.teal,

@@ -930,7 +930,8 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                               itemBuilder:(context, index){
                                 final file = carsImages[index];
                                 return buildFile(file);
-                              }),
+                              },
+                          ),
                         ),
                       ],
                     ),
@@ -953,7 +954,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                       msg: 'File Uploading...',
                       completed:
                       // Completed values can be customized
-                      Completed(completedMsg: "Downloading Done !"),
+                      Completed(completedMsg: "Uploading Done !"),
                       progressBgColor: Colors.transparent,
                     );
                     await CarsMainUpload();
@@ -984,7 +985,8 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                             fontFamily: 'Cairo'),
                       ),
                     ),
-                  )),
+                  ),
+              ),
             ),
           ],
         ),
