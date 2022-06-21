@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:hash/view/history.dart';
 import 'package:hash/view/home_body.dart';
 import '../upload/Root_Upload.dart';
+import '../view/history_page.dart';
 import '../view/search.dart';
 import '../view/user.dart';
 import 'dart:math' as math;
@@ -22,7 +22,7 @@ class _BottomHomeScreenState extends State<BottomHomeScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   final List<Widget> _screen = [
     HomeBody(),
-    History(),
+    HistoryPage(),
     ContactUs(),
     Settings(),
 

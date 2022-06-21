@@ -2,24 +2,22 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../model/property_card_view_model.dart';
-import '../services/property_card_http_request.dart';
+import '../services/front_&_history_card_http_request.dart';
 import 'filter_page_for_the_rest.dart';
-
 
 final DateTime now = DateTime.now();
 final DateFormat formatter = DateFormat('yyyy-MM-dd');
 final String formatted = formatter.format(now);
 
-
-class History extends StatefulWidget {
-  History({Key? key}) : super(key: key);
+class PropertyHistory extends StatefulWidget {
+  PropertyHistory({Key? key}) : super(key: key);
 
   @override
-  _HistoryState createState() => _HistoryState();
+  _PropertyHistoryState createState() => _PropertyHistoryState();
 }
 
-class _HistoryState extends State<History> {
-  List<PropertyCardView>? card;
+class _PropertyHistoryState extends State<PropertyHistory> {
+  List<PropertyCardView>? _propertyCard;
   var isLoaded = false;
 
   @override
@@ -29,8 +27,8 @@ class _HistoryState extends State<History> {
   }
 
   getData() async {
-    card = await HistoryViewCard().propertyCardView();
-    if (card != null  ) {
+    _propertyCard = await HistoryViewCard().propertyCardView();
+    if (_propertyCard != null) {
       setState(() {
         isLoaded = true;
       });
@@ -57,18 +55,19 @@ class _HistoryState extends State<History> {
           physics: BouncingScrollPhysics(),
           padding: EdgeInsets.only(top: 50),
           //crossAxisAlignment: CrossAxisAlignment.start,
-          itemCount: card?.length,
+          itemCount: _propertyCard?.length,
           itemBuilder: (BuildContext context, int index) {
-            return HistoryCarsCard(
-              location: card![index].areaName.toString(),
-              title: card![index].titel.toString(),
-              price: card![index].price.toString(),
-              img: card![index].fronPhoto.toString(),
-              logo: 'assets/cars/mitsubishi.svg',
+            return HistoryPropertyCard(
+              img: _propertyCard![index].fronPhoto.toString(),
+              title: _propertyCard![index].titel.toString(),
+              location: _propertyCard![index].areaName.toString(),
+              price: _propertyCard![index].price.toString(),
+              listing: "For Sale",
               active: active,
               onTap: () => toggle(),
-              date: card![index].date.toString(),
-              view: card![index].seen.toString(),
+              date: _propertyCard![index].date.toString(),
+              view: _propertyCard![index].seen.toString(),
+              currency: _propertyCard![index].currancy.toString(),
             );
           },
         ),
@@ -141,7 +140,6 @@ class _HistoryCarsCardState extends State<HistoryCarsCard> {
                     fit: BoxFit.cover,
                   ),
                 ),
-
               ),
               SizedBox(
                 width: 10,
@@ -339,12 +337,18 @@ class HistoryPropertyCard extends StatefulWidget {
     required this.listing,
     required this.active,
     required this.onTap,
+    required this.view,
+    required this.date,
+    required this.currency,
   }) : super(key: key);
   final String img;
   final String title;
   final String location;
   final String price;
   final String listing;
+  final String view;
+  final String date;
+  final String currency;
   final bool active;
   final VoidCallback onTap;
 
@@ -383,8 +387,8 @@ class _HistoryPropertyCardState extends State<HistoryPropertyCard> {
                         blurRadius: 12.0, color: Colors.grey.withOpacity(0.5))
                   ],
                   image: DecorationImage(
-                    image: AssetImage(
-                      widget.img,
+                    image: NetworkImage(
+                      "http://192.168.15.122/easy/image/${widget.img}",
                     ),
                     fit: BoxFit.cover,
                   ),
@@ -432,19 +436,35 @@ class _HistoryPropertyCardState extends State<HistoryPropertyCard> {
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        widget.price,
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.teal,
-                            fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.ellipsis),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.price,
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.teal,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            widget.currency,
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.teal,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 15,
                       ),
                       Text(
-                        "Uploaded: 14-jan-2022",
+                        "Uploaded: ${formatted}",
                         style: TextStyle(
                             fontSize: 18,
                             color: Colors.black,
@@ -499,12 +519,12 @@ class _HistoryPropertyCardState extends State<HistoryPropertyCard> {
                         children: [
                           EditDelete(
                             onTap: () {},
-                            title: '200',
+                            title: widget.view,
                             icon: Icons.remove_red_eye,
                             iconColor: Colors.teal,
                           ),
                           SizedBox(
-                            width: 10,
+                            width: 30,
                           ),
                           OutlinedButton(
                             style: OutlinedButton.styleFrom(

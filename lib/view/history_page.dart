@@ -1,34 +1,29 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:hash/view/property_history.dart';
 import 'package:hash/view/motors/motors.dart';
-import 'package:hash/view/property%20for%20rent/property_for_rent_types.dart';
-import '../model/menu_items_class.dart';
-import 'property for sale/estat_for_sale.dart';
-import 'dart:math' as math;
 import 'package:easy_localization/easy_localization.dart';
+
+import 'cars_history.dart';
+
 DateTime logout = DateTime.now();
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HistoryPage extends StatefulWidget {
+  const HistoryPage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HistoryPageState createState() => _HistoryPageState();
 }
 
-class _HomePageState extends State<HomePage>
+class _HistoryPageState extends State<HistoryPage>
     with TickerProviderStateMixin {
   final List<MyTabs> _tabs = [
     MyTabs(
-      title: "for sale".tr(),
+      title: "Property".tr(),
     ),
     MyTabs(
-      title: "for rent".tr(),
-    ),
-    MyTabs(
-        title: "motor".tr(),
+      title: "Cars".tr(),
     ),
   ];
   late MyTabs _myHandler;
@@ -42,7 +37,7 @@ class _HomePageState extends State<HomePage>
   void initState() {
     getUser();
     _myHandler = _tabs[0];
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_handleSelected);
     super.initState();
   }
@@ -68,25 +63,11 @@ class _HomePageState extends State<HomePage>
       appBar: AppBar(
         title: Center(
             child: Text(
-          _myHandler.title,
+          "History",
           style: const TextStyle(color: Colors.black),
         )),
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        leading: IconButton(
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              ZoomDrawer.of(context)!.toggle();
-            }),
-        actions: [
-          IconButton(
-              color: Colors.black,
-              onPressed: () async {},
-              icon: const Icon(Icons.search)),
-        ],
         bottom: TabBar(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           isScrollable: true,
@@ -96,7 +77,6 @@ class _HomePageState extends State<HomePage>
           controller: _tabController,
           indicator:
           CircleIndicator(color: const Color(0xffe55729), radius: 4),
-
           tabs: [
             Tab(
               text: _tabs[0].title,
@@ -107,9 +87,6 @@ class _HomePageState extends State<HomePage>
                 text: _tabs[1].title,
               ),
             ),
-            Tab(
-              text: _tabs[2].title,
-            )
           ],
         ),
       ),
@@ -118,10 +95,9 @@ class _HomePageState extends State<HomePage>
         height: size.height,
         child: TabBarView(
           controller: _tabController,
-          children: const  [
-            PropertyForSale(),
-            PropertyForRentTypes(),
-            MotorsSale(),
+          children:  [
+            PropertyHistory(),
+            CarsHistory(),
           ],
         ),
       ),

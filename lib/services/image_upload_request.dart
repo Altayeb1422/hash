@@ -8,7 +8,7 @@ import 'package:path/path.dart';
 
 
 
-Future uploadMultipleImages(File img,) async {
+Future uploadMultipleImages(File img) async {
 
   var uri = Uri.parse("http://192.168.15.122/easy/upload_property_images.php?Ads_Id="+adsId.toString()+"&Client_ID="+89.toString()); //sending post request with header data
   http.MultipartRequest request = http.MultipartRequest('POST', uri,);

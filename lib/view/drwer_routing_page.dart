@@ -2,8 +2,8 @@
 // import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 // import 'package:hash/view/search.dart';
 // import 'package:hash/view/favorite.dart';
-// import 'package:hash/view/history.dart';
-// import 'package:hash/view/home_page.dart';
+// import 'package:hash/view/property_history.dart';
+// import 'package:hash/view/history_page.dart';
 // import 'package:hash/view/menu_screen.dart';
 // import 'package:hash/view/notifications_page.dart';
 // import 'package:hash/view/user.dart';

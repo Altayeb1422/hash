@@ -84,9 +84,9 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
 
   Future<void> CarsMainUpload() async {
     var res = await http
-        .post(Uri.parse("http://192.168.15.116/easy/car_ads.php"), body: {
-      "Client_ID": "".toString(),
-      "AdsCode": "".toString(),
+        .post(Uri.parse("http://192.168.15.122/easy/car_ads.php"), body: {
+      "Client_ID": "",
+      "AdsCode": "",
       "Select2": widget.select2.toString(),
       "Select3": widget.select3.toString(),
       "Select4": widget.select4.toString(),

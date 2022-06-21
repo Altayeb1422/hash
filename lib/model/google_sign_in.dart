@@ -2,7 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
-import 'package:hash/view/home_page.dart';
+import 'package:hash/view/history_page.dart';
 final FirebaseAuth auth = FirebaseAuth.instance;
 
 Future<void> googleSignup(BuildContext context) async {
@@ -20,7 +20,7 @@ Future<void> googleSignup(BuildContext context) async {
 
     if (result != null) {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const HomePage()));
+          context, MaterialPageRoute(builder: (context) => const HistoryPage()));
     }
   }
 }
