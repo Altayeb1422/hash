@@ -344,6 +344,7 @@ class _HomeBodyState extends State<HomeBody> {
 class PropertyCard extends StatelessWidget {
   const PropertyCard({
     Key? key,
+
     required this.img,
     required this.title,
     required this.location,
