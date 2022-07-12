@@ -135,7 +135,7 @@ class _HistoryCarsCardState extends State<HistoryCarsCard> {
                   ],
                   image: DecorationImage(
                     image: NetworkImage(
-                      "http://192.168.15.122/easy/image/${widget.img}",
+                      "http://192.168.1.38/easy/image/${widget.img}",
                     ),
                     fit: BoxFit.cover,
                   ),
@@ -388,7 +388,7 @@ class _HistoryPropertyCardState extends State<HistoryPropertyCard> {
                   ],
                   image: DecorationImage(
                     image: NetworkImage(
-                      "http://192.168.15.122/easy/image/${widget.img}",
+                      "http://192.168.1.38/easy/image/${widget.img}",
                     ),
                     fit: BoxFit.cover,
                   ),

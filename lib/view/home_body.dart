@@ -14,12 +14,14 @@ import 'package:hash/view/single_property_page.dart';
 import 'package:hash/widget/dubzill_card_design.dart';
 import '../model/car_class.dart';
 import '../model/cars_card.dart';
+import '../model/cars_card_view_model.dart';
+import '../model/property_card_view_model.dart';
 import '../model/real_estate_class.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../model/root.dart';
+import '../services/front_card_view_http_request.dart';
 import 'cars_upload_filter_page.dart';
 import 'motors/motors.dart';
-
 
 class HomeBody extends StatefulWidget {
   const HomeBody({Key? key}) : super(key: key);
@@ -30,11 +32,33 @@ class HomeBody extends StatefulWidget {
 
 class _HomeBodyState extends State<HomeBody> {
   List<Tabs>? tabs;
+  List<CarsCardView>? _carsFrontCard;
+  List<PropertyCardView>? _propertyFrontCard;
   var isLoaded = false;
   @override
   void initState() {
     super.initState();
     getData();
+    getCarsData();
+    getPropertyData();
+  }
+
+  getPropertyData() async {
+    _propertyFrontCard = await FrontViewCard().propertyCardView();
+    if (_propertyFrontCard != null) {
+      setState(() {
+        isLoaded = true;
+      });
+    }
+  }
+
+  getCarsData() async {
+    _carsFrontCard = await FrontViewCard().carsCardView();
+    if (_carsFrontCard != null) {
+      setState(() {
+        isLoaded = true;
+      });
+    }
   }
 
   getData() async {
@@ -64,7 +88,10 @@ class _HomeBodyState extends State<HomeBody> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>CarsUploadFilterPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CarsUploadFilterPage()));
             }),
         actions: [
           IconButton(
@@ -157,29 +184,25 @@ class _HomeBodyState extends State<HomeBody> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * .38,
-                  child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * .37,
+                  width: MediaQuery.of(context).size.width * .1,
+                  child: GridView.builder(
                     scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        PropertyCard(
-                          img: 'assets/apart 4.jpg',
-                          location: 'Bahri-Enqaz',
-                          title: 'Studio apartment',
-                          price: '10,000 SDG/Day',
-                        ),
-                        //SizedBox(width: 10,),
-                        PropertyCard(
-                          img: 'assets/apart 3.jpg',
-                          location: 'khartoum-Gabra',
-                          title: 'Furnished apartment',
-                          price: '17,000 SDG/Day',
-                        ),
-                      ],
+                    itemCount: _propertyFrontCard?.length,
+                    itemBuilder: (context, index) {
+                      return PropertyCard(
+                        price: _propertyFrontCard![index].price.toString(),
+                        img: _propertyFrontCard![index].fronPhoto.toString(),
+                        location: _propertyFrontCard![index].areaName.toString(),
+                        title:  _propertyFrontCard![index].titel.toString(),
+                      );
+                    },
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                      childAspectRatio: 1.25,
+                      crossAxisSpacing: 9,
+                      mainAxisSpacing: 0,
                     ),
                   ),
                 ),
@@ -334,10 +357,13 @@ class PropertyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
       child: InkWell(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>SinglePropertyDetailPage()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SinglePropertyDetailPage()));
         },
         child: Container(
           height: MediaQuery.of(context).size.height * .33,
@@ -356,7 +382,7 @@ class PropertyCard extends StatelessWidget {
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * .2,
+                  height: MediaQuery.of(context).size.height * .22,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
@@ -364,9 +390,8 @@ class PropertyCard extends StatelessWidget {
                           blurRadius: 12.0, color: Colors.grey.withOpacity(0.5))
                     ],
                     image: DecorationImage(
-                      image: AssetImage(
-                        img,
-                      ),
+                      image:
+                      NetworkImage("http://192.168.1.38/easy/image/${img}"),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -504,7 +529,8 @@ class CarsCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: InkWell(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>SingleCarDetailsPage()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => SingleCarDetailsPage()));
         },
         child: Container(
           height: MediaQuery.of(context).size.height * .35,
@@ -558,8 +584,8 @@ class CarsCard extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 12.0),
                       decoration: const BoxDecoration(
                           border: Border(
-                              right:
-                                  BorderSide(width: 1.0, color: Colors.white24))),
+                              right: BorderSide(
+                                  width: 1.0, color: Colors.white24))),
                       child: SvgPicture.asset(
                         logo,
                       ),
@@ -664,4 +690,3 @@ class CarsCard extends StatelessWidget {
     );
   }
 }
-

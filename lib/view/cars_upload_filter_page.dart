@@ -16,15 +16,18 @@ import 'package:filter_list/filter_list.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 
-
 var carAdsId;
 
 class CarsUploadFilterPage extends StatefulWidget {
-  CarsUploadFilterPage({Key? key, this.allTextList, this.selectedUserList,this.select2,
-    this.select3,
-    this.select4,
-    this.select2Name,
-    this.select1Name})
+  CarsUploadFilterPage(
+      {Key? key,
+      this.allTextList,
+      this.selectedUserList,
+      this.select2,
+      this.select3,
+      this.select4,
+      this.select2Name,
+      this.select1Name})
       : super(key: key);
   final List<User>? allTextList;
   final List<User>? selectedUserList;
@@ -49,26 +52,26 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
   TextEditingController carDistanceController = TextEditingController();
   TextEditingController carDescController = TextEditingController();
 
-
   void openFiles(List<PlatformFile> files) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => FilesPage(files: files, onOpenedFile: openFile)));
   }
+
   Widget buildFile(file) {
     //final kb = file.size/1024;
     // final mb = kb/1024;
     // final fileSize = mb>= 1? mb.toStringAsFixed(2): kb.toStringAsFixed(2);
     //final extension = file.extension??'none';
-    final  img = file.path;
+    final img = file.path;
     return InkWell(
-      onTap: ()=> OpenFile.open(file.path),
+      onTap: () => OpenFile.open(file.path),
       child: Container(
         padding: const EdgeInsets.all(8),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Expanded(child:
-            Container(
+            Expanded(
+                child: Container(
               alignment: Alignment.center,
               width: double.infinity,
               decoration: BoxDecoration(
@@ -84,25 +87,25 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
 
   Future<void> CarsMainUpload() async {
     var res = await http
-        .post(Uri.parse("http://192.168.15.122/easy/car_ads.php"), body: {
+        .post(Uri.parse("http://192.168.1.38/easy/car_ads.php"), body: {
       "Client_ID": "",
       "AdsCode": "",
       "Select2": widget.select2.toString(),
       "Select3": widget.select3.toString(),
       "Select4": widget.select4.toString(),
-      "Title" : carNameController.text,
-      "Price" : carPriceController.text,
-      "Currency" : selectedCurrencyValue.toString(),
-      "Seats" : _seats.toString(),
-      "Engine" : _cylinders.toString(),
-      "Model" : carModelController.text,
-      "Color" : carColorController.text,
-      "Distance" : carDistanceController.text,
-      "Fuel" : fuelSelectedValue.toString(),
-      "State" : conditionSelectedValue.toString(),
-      "GeneralDescription" : carDescController.text,
-      "CityName" : "Kh",
-      "AreaName" : "",
+      "Title": carNameController.text,
+      "Price": carPriceController.text,
+      "Currency": selectedCurrencyValue.toString(),
+      "Seats": _seats.toString(),
+      "Engine": _cylinders.toString(),
+      "Model": carModelController.text,
+      "Color": carColorController.text,
+      "Distance": carDistanceController.text,
+      "Fuel": fuelSelectedValue.toString(),
+      "State": conditionSelectedValue.toString(),
+      "GeneralDescription": carDescController.text,
+      "CityName": "Kh",
+      "AreaName": "",
     }); //sending post request with header data
 
     if (res.statusCode == 200) {
@@ -169,6 +172,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
       },*/
     );
   }
+
   List<DropdownMenuItem<String>> menuItems = [
     DropdownMenuItem(
         child: Text(
@@ -236,9 +240,10 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
   void openFile(PlatformFile file) {
     OpenFile.open(file.path);
   }
+
   @override
   Widget build(BuildContext context) {
-    int length = carsImages.length-1;
+    int length = carsImages.length - 1;
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -260,8 +265,10 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
           // mainAxisAlignment: MainAxisAlignment.start,
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CardWidgetFilterPage(title: 'Category', onTap: () {}, choice: widget.select1Name),
-            CardWidgetFilterPage(title: "type".tr(), onTap: () {}, choice: widget.select2Name),
+            CardWidgetFilterPage(
+                title: 'Category', onTap: () {}, choice: widget.select1Name),
+            CardWidgetFilterPage(
+                title: "type".tr(), onTap: () {}, choice: widget.select2Name),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -618,7 +625,6 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                 ),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.only(
                   left: 25.0, right: 25, top: 10, bottom: 10),
@@ -638,9 +644,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                     controller: carModelController,
                     decoration: InputDecoration(
                       hintText: "2017",
-                      hintStyle: TextStyle(
-                        color: Colors.grey
-                      ),
+                      hintStyle: TextStyle(color: Colors.grey),
                       icon: Icon(
                         Icons.calendar_month_outlined,
                         color: Colors.teal,
@@ -649,7 +653,6 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                     keyboardType: TextInputType.number,
                   )),
             ),
-
             Padding(
               padding: const EdgeInsets.only(
                   left: 25.0, right: 25, top: 10, bottom: 10),
@@ -669,9 +672,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                     controller: carColorController,
                     decoration: InputDecoration(
                       hintText: "White",
-                      hintStyle: TextStyle(
-                          color: Colors.grey
-                      ),
+                      hintStyle: TextStyle(color: Colors.grey),
                       icon: Icon(
                         Icons.format_color_fill_outlined,
                         color: Colors.teal,
@@ -703,9 +704,7 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                         controller: carDistanceController,
                         decoration: InputDecoration(
                           hintText: "85,000",
-                          hintStyle: TextStyle(
-                              color: Colors.grey
-                          ),
+                          hintStyle: TextStyle(color: Colors.grey),
                           icon: Icon(
                             Icons.speed_outlined,
                             color: Colors.teal,
@@ -750,7 +749,9 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                     color: Colors.teal,
                   ),
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Container(
                   height: size.height * .1,
                   width: size.width * .2,
@@ -789,7 +790,9 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                     color: Colors.teal,
                   ),
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Container(
                   height: size.height * .1,
                   width: size.width * .2,
@@ -853,20 +856,14 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
             ),
             InkWell(
               onTap: () async {
-                final result = await FilePicker.platform
-                    .pickFiles(
+                final result = await FilePicker.platform.pickFiles(
                     allowMultiple: true,
                     type: FileType.custom,
-                    allowedExtensions: [
-                      "jpg",
-                      "png",
-                      "jpeg"
-                    ]);
+                    allowedExtensions: ["jpg", "png", "jpeg"]);
                 if (result != null) {
                   // Not sure if I should only get file path or complete data (this was in package documentation)
-                  List<File> files = result.paths
-                      .map((path) => File(path!))
-                      .toList();
+                  List<File> files =
+                      result.paths.map((path) => File(path!)).toList();
                   carsImages = files;
                 } else {
                   // User canceled the picker
@@ -877,64 +874,66 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 25.0, right: 25, top: 15),
                 child: Container(
-                    height: size.height * .2,
-                    decoration: DottedDecoration(
-                        shape: Shape.box,
-                        strokeWidth: 2,
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.teal),
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: Container(
-                            height: size.height,
-                            width: size.width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.teal.withOpacity(0.07),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.add_photo_alternate_outlined,
-                                  size: 50,
-                                  color: Colors.teal,
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Text(
-                                  'Upload Images',
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black),
-                                ),
-                              ],
-                            ),
+                  height: size.height * .2,
+                  decoration: DottedDecoration(
+                      shape: Shape.box,
+                      strokeWidth: 2,
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.teal),
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Container(
+                          height: size.height,
+                          width: size.width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.teal.withOpacity(0.07),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.add_photo_alternate_outlined,
+                                size: 50,
+                                color: Colors.teal,
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Text(
+                                'Upload Images',
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                              ),
+                            ],
                           ),
                         ),
-                        Container(
-                          height: size.height * .2,
-                          decoration: DottedDecoration(
-                              shape: Shape.box,
-                              strokeWidth: 2,
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.teal),
-                          child: GridView.builder(
-                              padding: const EdgeInsets.all(6),
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4, ),
-                              itemCount: carsImages.length,
-                              itemBuilder:(context, index){
-                                final file = carsImages[index];
-                                return buildFile(file);
-                              },
+                      ),
+                      Container(
+                        height: size.height * .2,
+                        decoration: DottedDecoration(
+                            shape: Shape.box,
+                            strokeWidth: 2,
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.teal),
+                        child: GridView.builder(
+                          padding: const EdgeInsets.all(6),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
                           ),
+                          itemCount: carsImages.length,
+                          itemBuilder: (context, index) {
+                            final file = carsImages[index];
+                            return buildFile(file);
+                          },
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -944,48 +943,48 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: MaterialButton(
-                  onPressed: () async {
-                    ProgressDialog pd = ProgressDialog(context: context);
-                    pd.show(
-                      //hideValue: true,
-                      progressType: ProgressType.normal,
-                      barrierDismissible: true,
-                      max: length,
-                      msg: 'File Uploading...',
-                      completed:
-                      // Completed values can be customized
-                      Completed(completedMsg: "Uploading Done !"),
-                      progressBgColor: Colors.transparent,
-                    );
-                    await CarsMainUpload();
-                    if(carsImages.length > 5){
-                      length = 5;
+                onPressed: () async {
+                  ProgressDialog pd = ProgressDialog(context: context);
+                  pd.show(
+                    //hideValue: true,
+                    progressType: ProgressType.normal,
+                    barrierDismissible: true,
+                    max: length,
+                    msg: 'File Uploading...',
+                    completed:
+                        // Completed values can be customized
+                        Completed(completedMsg: "Uploading Done !"),
+                    progressBgColor: Colors.transparent,
+                  );
+                  await CarsMainUpload();
+                  if (carsImages.length > 5) {
+                    length = 5;
+                  }
+                  for (int i = 0; i <= length; i++) {
+                    pd.update(value: i, msg: 'File uploading...');
+                    if (carsImages[i] != null) {
+                      await uploadCarsImages(carsImages[i]);
                     }
-                    for (int i = 0; i <= length; i++){
-                      pd.update(value: i, msg: 'File uploading...');
-                      if(carsImages[i] != null){
-                        await uploadCarsImages(carsImages[i]);
-                      }
-                    }
-                    print(length);
-                  },
-                  elevation: 10,
-                  color: Colors.red,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(28)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        "Upload",
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Cairo'),
-                      ),
+                  }
+                  print(length);
+                },
+                elevation: 10,
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                      "Upload",
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Cairo'),
                     ),
                   ),
+                ),
               ),
             ),
           ],
@@ -994,7 +993,6 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
     );
   }
 }
-
 
 class TitleWidget extends StatelessWidget {
   const TitleWidget({

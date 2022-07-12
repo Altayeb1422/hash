@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hash/local/local_controller.dart';
-import 'package:hash/view/drwer_routing_page.dart';
 import 'package:hash/view/registeration_screen.dart';
 import 'package:hash/view/verification_page.dart';
 import 'bottom_navigation/bottom_navigation_home.dart';

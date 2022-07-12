@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hash/view/property_history.dart';
-import 'package:hash/view/motors/motors.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'cars_history.dart';

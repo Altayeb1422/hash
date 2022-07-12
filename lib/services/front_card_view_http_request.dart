@@ -4,7 +4,7 @@ import '../model/cars_card_view_model.dart';
 import '../model/property_card_view_model.dart';
 
 
-class HistoryViewCard
+class FrontViewCard
 {
   Future<List<PropertyCardView>?> propertyCardView() async
   {
