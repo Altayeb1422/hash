@@ -9,7 +9,7 @@ class FrontViewCard
   Future<List<PropertyCardView>?> propertyCardView() async
   {
     var client = http.Client();
-    var uri = Uri.parse("http://192.168.1.38/easy/realstate_cardView_view.php");
+    var uri = Uri.parse("http://192.168.1.37/easy/realstate_cardView_view.php");
     var response = await client.get(uri);
     if(response.statusCode == 200)
     {
@@ -20,7 +20,7 @@ class FrontViewCard
   Future<List<CarsCardView>?> carsCardView() async
   {
     var client = http.Client();
-    var uri = Uri.parse("http://192.168.1.38/easy/cars_cardView_view.php");
+    var uri = Uri.parse("http://192.168.1.37/easy/cars_cardView_view.php");
     var response = await client.get(uri);
     if(response.statusCode == 200)
     {

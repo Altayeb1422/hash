@@ -22,6 +22,7 @@ import '../model/root.dart';
 import '../services/front_card_view_http_request.dart';
 import 'cars_upload_filter_page.dart';
 import 'motors/motors.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({Key? key}) : super(key: key);
@@ -35,6 +36,8 @@ class _HomeBodyState extends State<HomeBody> {
   List<CarsCardView>? _carsFrontCard;
   List<PropertyCardView>? _propertyFrontCard;
   var isLoaded = false;
+  var isLoadedCars = false;
+  var isLoadedProperty = false;
   @override
   void initState() {
     super.initState();
@@ -43,11 +46,12 @@ class _HomeBodyState extends State<HomeBody> {
     getPropertyData();
   }
 
+
   getPropertyData() async {
     _propertyFrontCard = await FrontViewCard().propertyCardView();
     if (_propertyFrontCard != null) {
       setState(() {
-        isLoaded = true;
+        isLoadedProperty = true;
       });
     }
   }
@@ -56,7 +60,7 @@ class _HomeBodyState extends State<HomeBody> {
     _carsFrontCard = await FrontViewCard().carsCardView();
     if (_carsFrontCard != null) {
       setState(() {
-        isLoaded = true;
+        isLoadedCars = true;
       });
     }
   }
@@ -69,7 +73,9 @@ class _HomeBodyState extends State<HomeBody> {
       });
     }
   }
-
+  Future<void> _Refresh ()async {
+    return await getData();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,148 +122,163 @@ class _HomeBodyState extends State<HomeBody> {
         ],
       ),
       body: SafeArea(
-        child: Visibility(
-          replacement: const Center(
-            child: CircularProgressIndicator(),
-          ),
-          visible: isLoaded,
-          child: ListView(
-            physics: const BouncingScrollPhysics(),
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .2,
-                width: MediaQuery.of(context).size.width,
-                child: GridView.builder(
-                  itemCount: tabs?.length,
-                  itemBuilder: (context, index) {
-                    return DubzillCardWidget(
-                      title: context.locale.toString() == 'ar'
-                          ? tabs![index].arabicLabel
-                          : tabs![index].englishLabel,
-                      icon: tabs![index].icon,
-                      onTap: () async {
-                        print(Intl.getCurrentLocale());
-                        if (tabs![index].id == '1') {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => PropertyForRentTypes(
-                                        parentId: tabs![index].id,
-                                      )));
-                        } else if (tabs![index].id == '2') {
-                          filterId.add(tabs![index].id);
-                          filterName.add(tabs![index].name);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => PropertyForSaleTypes(
-                                        parentId: tabs![index].id,
-                                      )));
-                        } else if (tabs![index].id == '3') {
-                          filterId.add(tabs![index].id);
-                          filterName.add(tabs![index].name);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const MotorsSale()));
-                        }
-                      },
-                    );
-                  },
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Text(
-                  "property".tr(),
-                  style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * .37,
-                  width: MediaQuery.of(context).size.width * .1,
+        child: LiquidPullToRefresh(
+          color: Colors.white,
+          backgroundColor: Colors.deepOrangeAccent,
+          showChildOpacityTransition: false,
+          springAnimationDurationInMilliseconds: 300,
+          animSpeedFactor: 1,
+          onRefresh: _Refresh,
+          child: Visibility(
+            replacement: const Center(
+              child: CircularProgressIndicator(),
+            ),
+            visible: isLoaded,
+            child: ListView(
+              physics: const BouncingScrollPhysics(),
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .2,
+                  width: MediaQuery.of(context).size.width,
                   child: GridView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _propertyFrontCard?.length,
+                    itemCount: tabs?.length,
                     itemBuilder: (context, index) {
-                      return PropertyCard(
-                        price: _propertyFrontCard![index].price.toString(),
-                        img: _propertyFrontCard![index].fronPhoto.toString(),
-                        location: _propertyFrontCard![index].areaName.toString(),
-                        title:  _propertyFrontCard![index].titel.toString(),
+                      return DubzillCardWidget(
+                        title: context.locale.toString() == 'ar'
+                            ? tabs![index].arabicLabel
+                            : tabs![index].englishLabel,
+                        icon: tabs![index].icon,
+                        onTap: () async {
+                          print(Intl.getCurrentLocale());
+                          if (tabs![index].id == '1') {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => PropertyForRentTypes(
+                                          parentId: tabs![index].id,
+                                        )));
+                          } else if (tabs![index].id == '2') {
+                            filterId.add(tabs![index].id);
+                            filterName.add(tabs![index].name);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => PropertyForSaleTypes(
+                                          parentId: tabs![index].id,
+                                        )));
+                          } else if (tabs![index].id == '3') {
+                            filterId.add(tabs![index].id);
+                            filterName.add(tabs![index].name);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const MotorsSale()));
+                          }
+                        },
                       );
                     },
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      childAspectRatio: 1.25,
-                      crossAxisSpacing: 9,
-                      mainAxisSpacing: 0,
+                      crossAxisCount: 3,
                     ),
                   ),
                 ),
-              ),
-              //propertyDisplay(),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
-                child: Text(
-                  "motor".tr(),
-                  style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Text(
+                    "property".tr(),
+                    style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * .38,
-                  child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        CarsCard(
-                          location: 'Bahri-Crane',
-                          title: 'Lancer',
-                          price: '',
-                          img: 'assets/sedan 1.jpg',
-                          logo: 'assets/cars/mitsubishi.svg',
+                const SizedBox(
+                  height: 20,
+                ),
+                Visibility(
+                  replacement: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  visible: isLoadedProperty,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * .37,
+                      width: MediaQuery.of(context).size.width * .1,
+                      child: GridView.builder(
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _propertyFrontCard?.length,
+                        itemBuilder: (context, index) {
+                          return PropertyCard(
+                            price: _propertyFrontCard![index].price.toString(),
+                            img: _propertyFrontCard![index].fronPhoto.toString(),
+                            location:
+                                _propertyFrontCard![index].areaName.toString(),
+                            title: _propertyFrontCard![index].titel.toString(),
+                          );
+                        },
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 1,
+                          childAspectRatio: 1.25,
+                          crossAxisSpacing: 9,
+                          mainAxisSpacing: 5,
                         ),
-                        CarsCard(
-                          location: 'Omdurman-Muwrada',
-                          title: 'Camery',
-                          price: '',
-                          img: 'assets/sedan 3.jpg',
-                          logo: 'assets/cars/toyota.svg',
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+                //propertyDisplay(),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
+                  child: Text(
+                    "motor".tr(),
+                    style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * .37,
+                    width: MediaQuery.of(context).size.width * .1,
+                    child: GridView.builder(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _carsFrontCard?.length,
+                      itemBuilder: (context, index) {
+                        return CarsCard(
+                          price: _carsFrontCard![index].price.toString(),
+                          img: _carsFrontCard![index].fronPhoto.toString(),
+                          location: _carsFrontCard![index].areaName.toString(),
+                          title: _carsFrontCard![index].title.toString(),
+                          logo: _carsFrontCard![index].logo.toString(),
+                        );
+                      },
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 1,
+                        childAspectRatio: 1.25,
+                        crossAxisSpacing: 9,
+                        mainAxisSpacing: 0,
+                      ),
+                    ),
+                  ),
+                ),
 
-              //carsDisplay()
-            ],
+                //carsDisplay()
+              ],
+            ),
           ),
         ),
       ),
@@ -344,7 +365,6 @@ class _HomeBodyState extends State<HomeBody> {
 class PropertyCard extends StatelessWidget {
   const PropertyCard({
     Key? key,
-
     required this.img,
     required this.title,
     required this.location,
@@ -358,7 +378,7 @@ class PropertyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -392,7 +412,7 @@ class PropertyCard extends StatelessWidget {
                     ],
                     image: DecorationImage(
                       image:
-                      NetworkImage("http://192.168.1.38/easy/image/${img}"),
+                          NetworkImage("http://192.168.1.37/easy/image/${img}"),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -527,14 +547,14 @@ class CarsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 10),
       child: InkWell(
         onTap: () {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => SingleCarDetailsPage()));
         },
         child: Container(
-          height: MediaQuery.of(context).size.height * .35,
+          height: MediaQuery.of(context).size.height * .33,
           width: MediaQuery.of(context).size.width * .6,
           decoration: BoxDecoration(
               boxShadow: [
@@ -558,9 +578,7 @@ class CarsCard extends StatelessWidget {
                           blurRadius: 12.0, color: Colors.grey.withOpacity(0.5))
                     ],
                     image: DecorationImage(
-                      image: AssetImage(
-                        img,
-                      ),
+                      image: NetworkImage("http://192.168.1.37/easy/image/${img}"),
                       fit: BoxFit.cover,
                     ),
                   ),
