@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -15,69 +15,116 @@ class _SettingsState extends State<Settings> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        title: Text("Profile"),
         elevation: 0.0,
         backgroundColor: Colors.transparent,
       ),
-      body:  SingleChildScrollView(
+      body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         physics: BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 25.0, vertical: 15),
-                  child: Text(
-                    "Profile",
-                    style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(
-                      shape: const RoundedRectangleBorder(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(20))),
-                      primary: Colors.white,
-                      backgroundColor: Color.fromRGBO(64, 75, 96, .9),
+            SizedBox(height: 15,),
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, top: 10, right: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * .20,
+                    width: MediaQuery.of(context).size.width * .4,
+                    decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(blurRadius: 7.0, color: Color(0xffa7a9af))
+                      ],
+                      borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                        image: AssetImage("assets/user.jpg"),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    onPressed: () {},
-                    label: Text(
-                      "Log Out",
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          overflow: TextOverflow.ellipsis),
-                    ),
-                    icon: Icon(Icons.logout_rounded),
+
+                    // "assets/user.svg",
+                    // height:size.height * .20,
+                    // width: size.width * .20,
                   ),
-                ),
-              ],
-            ),
-            Center(
-              child: SvgPicture.asset(
-                "assets/user.svg",
-                height:size.height * .20,
-                width: size.width * .20,
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        "Altayeb",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "Yousif",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold),
+                      ),
+
+                      TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            "Edit profile",
+                            style: TextStyle(
+                                color: Colors.deepOrangeAccent,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ))
+                    ],
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 10,),
-            Center(child: Text("email.123@gmail.com", style: TextStyle(color: Colors.grey, fontSize: 15),)),
-            SizedBox(height: 15,),
-            Divider(color: Colors.grey, indent: 40, endIndent: 40,),
-            OptionsCard(title: "Edit Profile", icon: Icon(Icons.person),),
-            OptionsCard(title: "Notifications", icon: Icon(Icons.notifications_rounded),),
-            OptionsCard(title: "Settings", icon: Icon(Icons.settings),),
-            OptionsCard(title: "Help", icon: Icon(Icons.help),),
-            OptionsCard(title: "Contact us", icon: Icon(Icons.call),),
+            SizedBox(
+              height: 15,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 25.0, left: 25),
+              child: Text(
+                "Dashboard",
+                style: TextStyle(
+                    color: Colors.grey.withOpacity(0.6),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            OptionsCard(title: 'Notifications', icon: Icon(Icons.notifications_rounded, color: Colors.white,), color: Colors.green,),
+            OptionsCard(title: 'Settings', icon: Icon(Icons.settings_outlined,color: Colors.white,), color: Colors.orange,),
+            OptionsCard(title: 'Help', icon: Icon(Icons.help_outline,color: Colors.white,), color: Colors.blue,),
+            OptionsCard(title: 'Contact Us', icon: Icon(Icons.call_outlined,color: Colors.white,), color: Colors.grey,),
+            Padding(
+              padding: const EdgeInsets.only(top: 25.0, left: 25),
+              child: Text(
+                "My Account",
+                style: TextStyle(
+                    color: Colors.grey.withOpacity(0.6),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+              child: TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    "Log Out",
+                    style: TextStyle(
+                        color: Colors.deepOrangeAccent,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  )),
+            )
           ],
         ),
       ),
@@ -87,35 +134,38 @@ class _SettingsState extends State<Settings> {
 
 class OptionsCard extends StatelessWidget {
   const OptionsCard({
-    Key? key, required this.icon, required this.title,
+    Key? key,
+    required this.icon,
+    required this.title, required this.color,
   }) : super(key: key);
   final dynamic icon;
   final String title;
+  final Color color;
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        elevation: 8.0,
-        margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 6.0),
-        child: Container(
-          decoration:
-          BoxDecoration(color: Color(0xfff2f2f2),borderRadius: BorderRadius.circular(30)),
-          child: ListTile(
-            iconColor: Colors.teal,
-            textColor: Colors.black,
-            contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20.0,  ),
-            leading: icon,
-            title: Text(title, style: TextStyle(
-              fontSize: 20,
-            ),),
-            trailing: Icon(Icons.arrow_forward_ios),
+      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            maxRadius: 28,
+            minRadius: 28,
+            foregroundColor: Colors.green,
+            backgroundColor: color,
+            child: Container(
+              child: icon,
+            ),
           ),
-        ),
+          SizedBox(width: 25,),
+          Text(title, style:TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold),),
+          Spacer(),
+          Icon(Icons.arrow_forward_ios, color:Colors.grey.withOpacity(0.6) ,size: 22,)
+        ],
       ),
     );
   }

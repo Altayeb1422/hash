@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shimmer/shimmer.dart';
 import '../model/cars_card_view_model.dart';
 import '../services/front_&_history_card_http_request.dart';
 
@@ -16,6 +18,12 @@ class CarsHistory extends StatefulWidget {
 }
 
 class _CarsHistoryState extends State<CarsHistory> {
+
+  RefreshController _refreshController =
+  RefreshController(initialRefresh: false);
+  RefreshController _shimmerRefreshController =
+  RefreshController(initialRefresh: false);
+
   List<CarsCardView>? _carsCard;
   var isLoaded = false;
 
@@ -33,7 +41,11 @@ class _CarsHistoryState extends State<CarsHistory> {
       });
     }
   }
-
+  Future<void> _Refresh() async {
+    await getCarsData();
+    _refreshController.refreshCompleted();
+    print("refresh");
+  }
   late bool active = true;
   void toggle() {
     setState(() {
@@ -46,29 +58,83 @@ class _CarsHistoryState extends State<CarsHistory> {
     //Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Visibility(
-        replacement: const Center(
-          child: CircularProgressIndicator(),
+        replacement:  Padding(
+          padding:  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10),
+          child: SmartRefresher(
+              enablePullDown: true,
+              header: WaterDropMaterialHeader(
+                backgroundColor: Color.fromRGBO(64, 75, 96, .9),
+                distance: 100,
+              ),
+              onRefresh: _Refresh,
+              controller: _shimmerRefreshController,
+            child: ListView(
+              children: [
+                Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: HistoryCarsCard(
+                    img: "",
+                    title: "",
+                    location: "",
+                    price: "",
+                    logo: "",
+                    active: active,
+                    onTap: () => toggle(),
+                    date: "",
+                    view: "",
+                    currency: "",
+                  ),
+                ),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: HistoryCarsCard(
+                    img: "",
+                    title: "",
+                    location: "",
+                    price: "",
+                    logo: "",
+                    active: active,
+                    onTap: () => toggle(),
+                    date: "",
+                    view: "",
+                    currency: "",
+                  ),
+                ),
+              ],
+            )
+          ),
         ),
         visible: isLoaded,
-        child: ListView.builder(
-          physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.only(top: 50),
-          //crossAxisAlignment: CrossAxisAlignment.start,
-          itemCount: _carsCard?.length,
-          itemBuilder: (BuildContext context, int index) {
-            return HistoryCarsCard(
-              img: _carsCard![index].fronPhoto.toString(),
-              title: _carsCard![index].title.toString(),
-              location: _carsCard![index].areaName.toString(),
-              price: _carsCard![index].price.toString(),
-              logo: _carsCard![index].logo.toString(),
-              active: active,
-              onTap: () => toggle(),
-              date: _carsCard![index].date.toString(),
-              view: _carsCard![index].seen.toString(),
-              currency: _carsCard![index].currency.toString(),
-            );
-          },
+        child: SmartRefresher(
+          enablePullDown: true,
+          header: WaterDropMaterialHeader(
+            backgroundColor: Color.fromRGBO(64, 75, 96, .9),
+            distance: 100,
+          ),
+          onRefresh: _Refresh,
+          controller: _refreshController,
+          child: ListView.builder(
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.only(top: 50),
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            itemCount: _carsCard?.length,
+            itemBuilder: (BuildContext context, int index) {
+              return HistoryCarsCard(
+                img: _carsCard![index].fronPhoto.toString(),
+                title: _carsCard![index].title.toString(),
+                location: _carsCard![index].areaName.toString(),
+                price: _carsCard![index].price.toString(),
+                logo: _carsCard![index].logo.toString(),
+                active: active,
+                onTap: () => toggle(),
+                date: _carsCard![index].date.toString(),
+                view: _carsCard![index].seen.toString(),
+                currency: _carsCard![index].currency.toString(),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -125,22 +191,40 @@ class _HistoryCarsCardState extends State<HistoryCarsCard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width * .4,
-                height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 12.0, color: Colors.grey.withOpacity(0.5))
-                  ],
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      "http://192.168.1.37/easy/image/${widget.img}",
+              Stack(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * .4,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                            image:  AssetImage("assets/placeholder.png"),
+                            fit: BoxFit.cover
+                        )
                     ),
-                    fit: BoxFit.cover,
                   ),
-                ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * .4,
+                      height: MediaQuery.of(context).size.height,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 12.0, color: Colors.grey.withOpacity(0.5))
+                        ],
+                      ),
+                      child: FadeInImage.assetNetwork(
+                        fit: BoxFit.cover,
+                        image: "http://192.168.15.124/easy/image/${widget.img}",
+                        placeholder: "assets/placeholder.png",
+                      ),
+                    ),
+                  ),
+
+                ],
               ),
               SizedBox(
                 width: 10,

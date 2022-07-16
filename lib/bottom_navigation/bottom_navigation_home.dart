@@ -99,7 +99,8 @@ class _BottomHomeScreenState extends State<BottomHomeScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar(
-        elevation: 30,
+        elevation: 8,
+        backgroundColor: const Color(0xfff2f2f2),
         height: MediaQuery.of(context).size.height*0.07,
         iconSize: 30,
         activeColor: Colors.deepOrange,
@@ -107,9 +108,9 @@ class _BottomHomeScreenState extends State<BottomHomeScreen> {
         icons: iconList,
         activeIndex: _selectedIndex,
         gapLocation: GapLocation.center,
-        notchSmoothness: NotchSmoothness.verySmoothEdge,
-        leftCornerRadius: 32,
-        rightCornerRadius: 32,
+        notchSmoothness: NotchSmoothness.sharpEdge,
+        // leftCornerRadius: 32,
+        // rightCornerRadius: 32,
         onTap: (index) => setState(() => _onTapped(index)),
         //other params
       ),

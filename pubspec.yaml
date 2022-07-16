@@ -93,6 +93,9 @@ dependencies:
   sn_progress_dialog: ^1.0.8
   shimmer: ^2.0.0
   liquid_pull_to_refresh: ^3.0.1
+  cached_network_image: ^3.2.1
+  custom_refresh_indicator: ^1.2.1
+  pull_to_refresh: ^2.0.0
 
 
 

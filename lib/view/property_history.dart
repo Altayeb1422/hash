@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shimmer/shimmer.dart';
 import '../model/property_card_view_model.dart';
 import '../services/front_&_history_card_http_request.dart';
 import 'filter_page_for_the_rest.dart';
@@ -17,6 +19,10 @@ class PropertyHistory extends StatefulWidget {
 }
 
 class _PropertyHistoryState extends State<PropertyHistory> {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+  RefreshController _shimmerRefreshController =
+  RefreshController(initialRefresh: false);
   List<PropertyCardView>? _propertyCard;
   var isLoaded = false;
 
@@ -35,6 +41,12 @@ class _PropertyHistoryState extends State<PropertyHistory> {
     }
   }
 
+  Future<void> _Refresh() async {
+    await getData();
+    _refreshController.refreshCompleted();
+    print("refresh");
+  }
+
   late bool active = true;
   void toggle() {
     setState(() {
@@ -47,29 +59,85 @@ class _PropertyHistoryState extends State<PropertyHistory> {
     //Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Visibility(
-        replacement: const Center(
-          child: CircularProgressIndicator(),
+        replacement: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10),
+          child: SmartRefresher(
+            enablePullDown: true,
+            header: WaterDropMaterialHeader(
+              backgroundColor: Color.fromRGBO(64, 75, 96, .9),
+              distance: 100,
+            ),
+            onRefresh: _Refresh,
+            controller: _shimmerRefreshController,
+            physics: BouncingScrollPhysics(),
+            child: ListView(
+              children: [
+                Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: HistoryPropertyCard(
+                    img: "",
+                    title: "",
+                    location: "",
+                    price: "",
+                    listing: "",
+                    active: active,
+                    onTap: () => toggle(),
+                    date: "",
+                    view: "",
+                    currency: "",
+                  ),
+                ),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: HistoryPropertyCard(
+                    img: "",
+                    title: "",
+                    location: "",
+                    price: "",
+                    listing: "",
+                    active: active,
+                    onTap: () => toggle(),
+                    date: "",
+                    view: "",
+                    currency: "",
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         visible: isLoaded,
-        child: ListView.builder(
+        child: SmartRefresher(
+          enablePullDown: true,
+          header: WaterDropMaterialHeader(
+            backgroundColor: Color.fromRGBO(64, 75, 96, .9),
+            distance: 100,
+          ),
+          onRefresh: _Refresh,
+          controller: _refreshController,
           physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.only(top: 50),
-          //crossAxisAlignment: CrossAxisAlignment.start,
-          itemCount: _propertyCard?.length,
-          itemBuilder: (BuildContext context, int index) {
-            return HistoryPropertyCard(
-              img: _propertyCard![index].fronPhoto.toString(),
-              title: _propertyCard![index].titel.toString(),
-              location: _propertyCard![index].areaName.toString(),
-              price: _propertyCard![index].price.toString(),
-              listing: "For Sale",
-              active: active,
-              onTap: () => toggle(),
-              date: _propertyCard![index].date.toString(),
-              view: _propertyCard![index].seen.toString(),
-              currency: _propertyCard![index].currancy.toString(),
-            );
-          },
+          child: ListView.builder(
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.only(top: 50),
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            itemCount: _propertyCard?.length,
+            itemBuilder: (BuildContext context, int index) {
+              return HistoryPropertyCard(
+                img: _propertyCard![index].fronPhoto.toString(),
+                title: _propertyCard![index].titel.toString(),
+                location: _propertyCard![index].areaName.toString(),
+                price: _propertyCard![index].price.toString(),
+                listing: "For Sale",
+                active: active,
+                onTap: () => toggle(),
+                date: _propertyCard![index].date.toString(),
+                view: _propertyCard![index].seen.toString(),
+                currency: _propertyCard![index].currancy.toString(),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -377,23 +445,42 @@ class _HistoryPropertyCardState extends State<HistoryPropertyCard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width * .4,
-                height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 12.0, color: Colors.grey.withOpacity(0.5))
-                  ],
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      "http://192.168.1.38/easy/image/${widget.img}",
+              Stack(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * .4,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                            image:  AssetImage("assets/placeholder.png"),
+                            fit: BoxFit.cover
+                        )
                     ),
-                    fit: BoxFit.cover,
                   ),
-                ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * .4,
+                      height: MediaQuery.of(context).size.height,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 12.0, color: Colors.grey.withOpacity(0.5))
+                        ],
+                      ),
+                      child: FadeInImage.assetNetwork(
+                        fit: BoxFit.cover,
+                        image: "http://192.168.15.124/easy/image/${widget.img}",
+                        placeholder: "assets/placeholder.png",
+                      ),
+                    ),
+                  ),
+
+                ],
               ),
+
               SizedBox(
                 width: 10,
               ),

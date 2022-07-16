@@ -83,7 +83,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
   }
   Future<void> propertyMainUpload() async {
     var res = await http
-        .post(Uri.parse("http://192.168.1.37/easy/insert_ads.php"), body: {
+        .post(Uri.parse("http://192.168.15.124/easy/insert_ads.php"), body: {
       "Client_ID": "",
       "AdsCode": "",
       "Select2": widget.select2.toString(),
@@ -115,7 +115,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
 
 
   postingList(String service) async {
-    final uri = "http://192.168.1.37/easy/features.php";
+    final uri = "http://192.168.15.124/easy/features.php";
     data = {"Ads_Id": adsId.toString(), "Desc_Name": service};
     http.Response response = await http.post(
       Uri.parse(uri),

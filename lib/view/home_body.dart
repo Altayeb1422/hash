@@ -1,28 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hash/main.dart';
 import 'package:hash/services/remote_services.dart';
-import 'package:hash/view/motor_detailes.dart';
 import 'package:hash/view/property%20for%20rent/property_for_rent_types.dart';
 import 'package:hash/view/property%20for%20sale/property_for_sale_types.dart';
-import 'package:hash/view/real_estate_card.dart';
-import 'package:hash/view/real_estate_detailes.dart';
 import 'package:hash/view/single_car_page.dart';
 import 'package:hash/view/single_property_page.dart';
 import 'package:hash/widget/dubzill_card_design.dart';
-import '../model/car_class.dart';
-import '../model/cars_card.dart';
 import '../model/cars_card_view_model.dart';
 import '../model/property_card_view_model.dart';
-import '../model/real_estate_class.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../model/root.dart';
 import '../services/front_card_view_http_request.dart';
 import 'cars_upload_filter_page.dart';
 import 'motors/motors.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({Key? key}) : super(key: key);
@@ -32,6 +26,10 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+  RefreshController _shimmerRefreshController =
+      RefreshController(initialRefresh: false);
   List<Tabs>? tabs;
   List<CarsCardView>? _carsFrontCard;
   List<PropertyCardView>? _propertyFrontCard;
@@ -45,7 +43,6 @@ class _HomeBodyState extends State<HomeBody> {
     getCarsData();
     getPropertyData();
   }
-
 
   getPropertyData() async {
     _propertyFrontCard = await FrontViewCard().propertyCardView();
@@ -73,9 +70,15 @@ class _HomeBodyState extends State<HomeBody> {
       });
     }
   }
-  Future<void> _Refresh ()async {
-    return await getData();
+
+  Future<void> _Refresh() async {
+    await getData();
+    await getCarsData();
+    await getPropertyData();
+    _refreshController.refreshCompleted();
+    print("refresh");
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,18 +125,151 @@ class _HomeBodyState extends State<HomeBody> {
         ],
       ),
       body: SafeArea(
-        child: LiquidPullToRefresh(
-          color: Colors.white,
-          backgroundColor: Colors.deepOrangeAccent,
-          showChildOpacityTransition: false,
-          springAnimationDurationInMilliseconds: 300,
-          animSpeedFactor: 1,
-          onRefresh: _Refresh,
-          child: Visibility(
-            replacement: const Center(
-              child: CircularProgressIndicator(),
+        child: Visibility(
+          replacement: SmartRefresher(
+            enablePullDown: true,
+            header: WaterDropMaterialHeader(
+              backgroundColor: Color.fromRGBO(64, 75, 96, .9),
+              distance: 100,
             ),
-            visible: isLoaded,
+            onRefresh: _Refresh,
+            controller: _shimmerRefreshController,
+            physics: BouncingScrollPhysics(),
+            child: ListView(
+              physics: const BouncingScrollPhysics(),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * .15,
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: DubzillCardWidget(
+                                title: "", icon: "", onTap: () {})),
+                        Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: DubzillCardWidget(
+                                title: "", icon: "", onTap: () {})),
+                        Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: DubzillCardWidget(
+                                title: "", icon: "", onTap: () {})),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Text(
+                    "property".tr(),
+                    style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .37,
+                  width: MediaQuery.of(context).size.width * .1,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: PropertyCard(
+                              price: "", img: "", location: "", title: ""),
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: PropertyCard(
+                              price: "", img: "", location: "", title: ""),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                //propertyDisplay(),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0, vertical: 15),
+                  child: Text(
+                    "motor".tr(),
+                    style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .37,
+                  width: MediaQuery.of(context).size.width * .1,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    child: Row(
+                      children: [
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: CarsCard(
+                            price: "",
+                            img: "",
+                            location: "",
+                            title: "",
+                            logo: "",
+                          ),
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: CarsCard(
+                            price: "",
+                            img: "",
+                            location: "",
+                            title: "",
+                            logo: "",
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                //carsDisplay()
+              ],
+            ),
+          ),
+          visible: isLoaded,
+          child: SmartRefresher(
+            enablePullDown: true,
+            header: WaterDropMaterialHeader(
+              backgroundColor: Color.fromRGBO(64, 75, 96, .9),
+              distance: 100,
+            ),
+            onRefresh: _Refresh,
+            controller: _refreshController,
+            physics: BouncingScrollPhysics(),
             child: ListView(
               physics: const BouncingScrollPhysics(),
               children: [
@@ -177,7 +313,8 @@ class _HomeBodyState extends State<HomeBody> {
                         },
                       );
                     },
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                     ),
                   ),
@@ -196,35 +333,35 @@ class _HomeBodyState extends State<HomeBody> {
                   height: 20,
                 ),
                 Visibility(
-                  replacement: const Center(
-                    child: CircularProgressIndicator(),
+                  replacement: Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    child: PropertyCard(
+                        price: "", img: "", location: "", title: ""),
                   ),
                   visible: isLoadedProperty,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * .37,
-                      width: MediaQuery.of(context).size.width * .1,
-                      child: GridView.builder(
-                        physics: BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _propertyFrontCard?.length,
-                        itemBuilder: (context, index) {
-                          return PropertyCard(
-                            price: _propertyFrontCard![index].price.toString(),
-                            img: _propertyFrontCard![index].fronPhoto.toString(),
-                            location:
-                                _propertyFrontCard![index].areaName.toString(),
-                            title: _propertyFrontCard![index].titel.toString(),
-                          );
-                        },
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 1,
-                          childAspectRatio: 1.25,
-                          crossAxisSpacing: 9,
-                          mainAxisSpacing: 5,
-                        ),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * .37,
+                    width: MediaQuery.of(context).size.width * .1,
+                    child: GridView.builder(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _propertyFrontCard?.length,
+                      itemBuilder: (context, index) {
+                        return PropertyCard(
+                          price: _propertyFrontCard![index].price.toString(),
+                          img: _propertyFrontCard![index].fronPhoto.toString(),
+                          location:
+                              _propertyFrontCard![index].areaName.toString(),
+                          title: _propertyFrontCard![index].titel.toString(),
+                        );
+                      },
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 1,
+                        childAspectRatio: 1.25,
+                        crossAxisSpacing: 9,
+                        mainAxisSpacing: 5,
                       ),
                     ),
                   ),
@@ -234,8 +371,8 @@ class _HomeBodyState extends State<HomeBody> {
                   height: 20,
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0, vertical: 15),
                   child: Text(
                     "motor".tr(),
                     style: const TextStyle(
@@ -247,8 +384,19 @@ class _HomeBodyState extends State<HomeBody> {
                 const SizedBox(
                   height: 5,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                Visibility(
+                  replacement: Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    child: CarsCard(
+                      price: "",
+                      img: "",
+                      location: "",
+                      title: "",
+                      logo: "",
+                    ),
+                  ),
+                  visible: isLoadedCars,
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * .37,
                     width: MediaQuery.of(context).size.width * .1,
@@ -281,53 +429,6 @@ class _HomeBodyState extends State<HomeBody> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Container carsDisplay() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      child: MasonryGridView.count(
-        physics: const BouncingScrollPhysics(),
-        itemCount: 4,
-        shrinkWrap: true,
-        itemBuilder: (context, index) => AutomotiveCard(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MotorDetailes(cars: cars[index])));
-          },
-          cars: cars[index],
-        ),
-        crossAxisCount: 2,
-        crossAxisSpacing: 5,
-        mainAxisSpacing: 15,
-      ),
-    );
-  }
-
-  Container propertyDisplay() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      child: MasonryGridView.count(
-        physics: const BouncingScrollPhysics(),
-        itemCount: 4,
-        shrinkWrap: true,
-        itemBuilder: (BuildContext context, int index) => Realestate(
-          property: property[index],
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        PropertyInfo(property: property[index])));
-          },
-        ),
-        crossAxisCount: 2,
-        crossAxisSpacing: 5,
-        mainAxisSpacing: 15,
       ),
     );
   }
@@ -401,21 +502,38 @@ class PropertyCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * .22,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 12.0, color: Colors.grey.withOpacity(0.5))
-                    ],
-                    image: DecorationImage(
-                      image:
-                          NetworkImage("http://192.168.1.37/easy/image/${img}"),
-                      fit: BoxFit.cover,
+                Stack(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * .22,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          image: DecorationImage(
+                              image: AssetImage("assets/placeholder.png"),
+                              fit: BoxFit.cover)),
                     ),
-                  ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * .22,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 12.0,
+                                color: Colors.grey.withOpacity(0.5))
+                          ],
+                        ),
+                        child: FadeInImage.assetNetwork(
+                          fit: BoxFit.cover,
+                          image: "http://192.168.15.124/easy/image/${img}",
+                          placeholder: "assets/placeholder.png",
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 5,
@@ -547,7 +665,7 @@ class CarsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
       child: InkWell(
         onTap: () {
           Navigator.push(context,
@@ -568,20 +686,38 @@ class CarsCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * .22,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 12.0, color: Colors.grey.withOpacity(0.5))
-                    ],
-                    image: DecorationImage(
-                      image: NetworkImage("http://192.168.1.37/easy/image/${img}"),
-                      fit: BoxFit.cover,
+                Stack(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * .22,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          image: DecorationImage(
+                              image: AssetImage("assets/placeholder.png"),
+                              fit: BoxFit.cover)),
                     ),
-                  ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * .22,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 12.0,
+                                color: Colors.grey.withOpacity(0.5))
+                          ],
+                        ),
+                        child: FadeInImage.assetNetwork(
+                          fit: BoxFit.cover,
+                          image: "http://192.168.15.124/easy/image/${img}",
+                          placeholder: "assets/placeholder.png",
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 5,
