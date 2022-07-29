@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:open_file/open_file.dart';
 import '../images_page.dart';
-import '../services/image_upload_request.dart';
+import '../services/image_upload_request_http_request.dart';
 import '../widget/card_widget_filter_page.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
@@ -957,8 +957,8 @@ class _CarsUploadFilterPageState extends State<CarsUploadFilterPage> {
                     progressBgColor: Colors.transparent,
                   );
                   await CarsMainUpload();
-                  if (carsImages.length > 5) {
-                    length = 5;
+                  if (carsImages.length > 10) {
+                    length = 10;
                   }
                   for (int i = 0; i <= length; i++) {
                     pd.update(value: i, msg: 'File uploading...');

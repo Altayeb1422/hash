@@ -11,7 +11,6 @@ class ChildRemoteService
   Future postParentId(id) async {
     var client = http.Client();
     var res = await client.get(Uri.parse("http://192.168.15.124/easy/Childs.php?parentId="+id),);
-
     if(res.statusCode == 200){
       debugPrint("Data posted successfully");
       print(res.body);
@@ -23,14 +22,14 @@ class ChildRemoteService
     }
   }
 
-  Future<List<FilterTabs>?> getFilterTabs() async
-  {
-    var client = http.Client();
-    var response = await client.get(Uri.parse("http://192.168.15.124/easy/Childs.php"),);
-    if(response.statusCode == 200)
-    {
-      var jason = response.body;
-      return filterTabsFromJson(jason);
-    }
-  }
+  // Future<List<FilterTabs>?> getFilterTabs() async
+  // {
+  //   var client = http.Client();
+  //   var response = await client.get(Uri.parse("http://192.168.142.221/easy/Childs.php"),);
+  //   if(response.statusCode == 200)
+  //   {
+  //     var jason = response.body;
+  //     return filterTabsFromJson(jason);
+  //   }
+  // }
 }

@@ -7,14 +7,14 @@ import '../model/root.dart';
 class RemoteService
 {
 
-  Future postParentId(id) async {
-    var res = await http.post(Uri.parse("http://192.168.15.124/easy/Childs.php"), body:id);
-    if(res.statusCode == 200){
-      debugPrint("Data posted successfully");
-    }else{ 
-      debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
-    }
-  }
+  // Future postParentId(id) async {
+  //   var res = await http.post(Uri.parse("http://192.168.15.124/easy/Childs.php"), body:id);
+  //   if(res.statusCode == 200){
+  //     debugPrint("Data posted successfully");
+  //   }else{
+  //     debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
+  //   }
+  // }
 
   Future<List<Tabs>?> getTabs() async
   {

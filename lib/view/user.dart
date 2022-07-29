@@ -99,10 +99,10 @@ class _SettingsState extends State<Settings> {
             SizedBox(
               height: 15,
             ),
-            OptionsCard(title: 'Notifications', icon: Icon(Icons.notifications_rounded, color: Colors.white,), color: Colors.green,),
-            OptionsCard(title: 'Settings', icon: Icon(Icons.settings_outlined,color: Colors.white,), color: Colors.orange,),
-            OptionsCard(title: 'Help', icon: Icon(Icons.help_outline,color: Colors.white,), color: Colors.blue,),
-            OptionsCard(title: 'Contact Us', icon: Icon(Icons.call_outlined,color: Colors.white,), color: Colors.grey,),
+            OptionsCard(title: 'Calendar', icon: Icon(Icons.calendar_month_outlined, color: Colors.white,), color: Colors.green, onTap: () {  },),
+            OptionsCard(title: 'Settings', icon: Icon(Icons.settings_outlined,color: Colors.white,), color: Colors.orange, onTap: () {  },),
+            OptionsCard(title: 'Help', icon: Icon(Icons.help_outline,color: Colors.white,), color: Colors.blue, onTap: () {  },),
+            OptionsCard(title: 'Contact Us', icon: Icon(Icons.call_outlined,color: Colors.white,), color: Colors.grey, onTap: () {  },),
             Padding(
               padding: const EdgeInsets.only(top: 25.0, left: 25),
               child: Text(
@@ -136,36 +136,40 @@ class OptionsCard extends StatelessWidget {
   const OptionsCard({
     Key? key,
     required this.icon,
-    required this.title, required this.color,
+    required this.title, required this.color, required this.onTap,
   }) : super(key: key);
   final dynamic icon;
   final String title;
   final Color color;
+  final VoidCallback onTap;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CircleAvatar(
-            maxRadius: 28,
-            minRadius: 28,
-            foregroundColor: Colors.green,
-            backgroundColor: color,
-            child: Container(
-              child: icon,
+      child: InkWell(
+        onTap: onTap,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              maxRadius: 28,
+              minRadius: 28,
+              foregroundColor: Colors.green,
+              backgroundColor: color,
+              child: Container(
+                child: icon,
+              ),
             ),
-          ),
-          SizedBox(width: 25,),
-          Text(title, style:TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.bold),),
-          Spacer(),
-          Icon(Icons.arrow_forward_ios, color:Colors.grey.withOpacity(0.6) ,size: 22,)
-        ],
+            SizedBox(width: 25,),
+            Text(title, style:TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.bold),),
+            Spacer(),
+            Icon(Icons.arrow_forward_ios, color:Colors.grey.withOpacity(0.6) ,size: 22,)
+          ],
+        ),
       ),
     );
   }

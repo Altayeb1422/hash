@@ -5,8 +5,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:sn_progress_dialog/completed.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
 import '../images_page.dart';
-import '../services/image_upload_request.dart';
+import '../services/image_upload_request_http_request.dart';
 import '../widget/card_widget_filter_page.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
@@ -257,7 +259,7 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
   }
   @override
   Widget build(BuildContext context) {
-    int length = PropertyImages.length-1;
+    int length = PropertyImages.length - 1;
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -983,20 +985,35 @@ class _PropertyUploadFilterPageState extends State<PropertyUploadFilterPage> {
               padding: const EdgeInsets.all(10.0),
               child: MaterialButton(
                   onPressed: () async {
+                    ProgressDialog pd = ProgressDialog(context: context);
+                    pd.show(
+                      //hideValue: true,
+                      progressType: ProgressType.normal,
+                      barrierDismissible: true,
+                      max: length,
+                      msg: 'File Uploading...',
+                      completed:
+                      // Completed values can be customized
+                      Completed(completedMsg: "Uploading Done !"),
+                      progressBgColor: Colors.transparent,
+                    );
                     await propertyMainUpload();
-                    for (int i = 0; i <= selectedUserList!.length-1; i++){
-                      if(selectedUserList![i].service! != null){
-                        await postingList(selectedUserList![i].service!);
-                      }
-                    };
-                    if(PropertyImages.length > 5){
-                      length = 5;
+                    if(PropertyImages.length > 10){
+                      length = 10;
                     }
                     for (int i = 0; i <= length; i++){
                       if(PropertyImages[i] != null){
                        await uploadMultipleImages(PropertyImages[i],);
                       }
                     }
+                    for (int i = 0; i <= selectedUserList!.length-1; i++){
+
+                    if(selectedUserList![i].service! != null){
+
+                    await postingList(selectedUserList![i].service!);
+
+                    }
+                    };
                     print(length);
                   },
                   elevation: 10,
@@ -1099,7 +1116,7 @@ List<User> userList = [
     icon: Icons.iron_rounded,
   ),
   User(
-    service: "utinsels",
+    service: "utensils",
     icon: Icons.flatware,
   ),
   User(

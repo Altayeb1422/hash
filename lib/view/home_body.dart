@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hash/main.dart';
 import 'package:hash/services/remote_services.dart';
 import 'package:hash/view/property%20for%20rent/property_for_rent_types.dart';
@@ -13,6 +12,7 @@ import '../model/property_card_view_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../model/root.dart';
 import '../services/front_card_view_http_request.dart';
+import '../widget/cars_homePage_card.dart';
 import 'cars_upload_filter_page.dart';
 import 'motors/motors.dart';
 import 'package:shimmer/shimmer.dart';
@@ -26,16 +26,17 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
-  RefreshController _shimmerRefreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
+  RefreshController _shimmerRefreshController = RefreshController(initialRefresh: false);
+
   List<Tabs>? tabs;
   List<CarsCardView>? _carsFrontCard;
   List<PropertyCardView>? _propertyFrontCard;
+
   var isLoaded = false;
   var isLoadedCars = false;
   var isLoadedProperty = false;
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +60,7 @@ class _HomeBodyState extends State<HomeBody> {
       setState(() {
         isLoadedCars = true;
       });
+      // return tabsFromJson(_carsFrontCard.toString());
     }
   }
 
@@ -68,6 +70,7 @@ class _HomeBodyState extends State<HomeBody> {
       setState(() {
         isLoaded = true;
       });
+
     }
   }
 
@@ -191,13 +194,23 @@ class _HomeBodyState extends State<HomeBody> {
                           baseColor: Colors.grey.shade300,
                           highlightColor: Colors.grey.shade100,
                           child: PropertyCard(
-                              price: "", img: "", location: "", title: ""),
+                            price: "",
+                            img: "",
+                            location: "",
+                            title: "",
+                            onTap: () {},
+                          ),
                         ),
                         Shimmer.fromColors(
                           baseColor: Colors.grey.shade300,
                           highlightColor: Colors.grey.shade100,
                           child: PropertyCard(
-                              price: "", img: "", location: "", title: ""),
+                            price: "",
+                            img: "",
+                            location: "",
+                            title: "",
+                            onTap: () {},
+                          ),
                         ),
                       ],
                     ),
@@ -238,6 +251,7 @@ class _HomeBodyState extends State<HomeBody> {
                             location: "",
                             title: "",
                             logo: "",
+                            onTap: () {},
                           ),
                         ),
                         Shimmer.fromColors(
@@ -249,6 +263,7 @@ class _HomeBodyState extends State<HomeBody> {
                             location: "",
                             title: "",
                             logo: "",
+                            onTap: () {},
                           ),
                         ),
                       ],
@@ -273,52 +288,52 @@ class _HomeBodyState extends State<HomeBody> {
             child: ListView(
               physics: const BouncingScrollPhysics(),
               children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * .2,
-                  width: MediaQuery.of(context).size.width,
-                  child: GridView.builder(
-                    itemCount: tabs?.length,
-                    itemBuilder: (context, index) {
-                      return DubzillCardWidget(
-                        title: context.locale.toString() == 'ar'
-                            ? tabs![index].arabicLabel
-                            : tabs![index].englishLabel,
-                        icon: tabs![index].icon,
-                        onTap: () async {
-                          print(Intl.getCurrentLocale());
-                          if (tabs![index].id == '1') {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => PropertyForRentTypes(
-                                          parentId: tabs![index].id,
-                                        )));
-                          } else if (tabs![index].id == '2') {
-                            filterId.add(tabs![index].id);
-                            filterName.add(tabs![index].name);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => PropertyForSaleTypes(
-                                          parentId: tabs![index].id,
-                                        )));
-                          } else if (tabs![index].id == '3') {
-                            filterId.add(tabs![index].id);
-                            filterName.add(tabs![index].name);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const MotorsSale()));
-                          }
-                        },
-                      );
-                    },
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                    ),
-                  ),
+                FutureBuilder<List<Tabs>?>(
+                    future: RemoteService().getTabs(),
+                    builder: (context, snapshot) {
+                      final data = snapshot.data;
+                      switch(snapshot.connectionState){
+                        case ConnectionState.none:
+                        // TODO: Handle this case.
+                          break;
+                        case ConnectionState.waiting:
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 20.0),
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height * .15,
+                              width: MediaQuery.of(context).size.width,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade300,
+                                      highlightColor: Colors.grey.shade100,
+                                      child: DubzillCardWidget(
+                                          title: "", icon: "", onTap: () {})),
+                                  Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade300,
+                                      highlightColor: Colors.grey.shade100,
+                                      child: DubzillCardWidget(
+                                          title: "", icon: "", onTap: () {})),
+                                  Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade300,
+                                      highlightColor: Colors.grey.shade100,
+                                      child: DubzillCardWidget(
+                                          title: "", icon: "", onTap: () {})),
+                                ],
+                              ),
+                            ),
+                          );
+                        case ConnectionState.active:
+                        // TODO: Handle this case.
+                          break;
+                        case ConnectionState.done:
+                          return buildTabs(data);
+                      }
+                      return Center(child: CircularProgressIndicator(),);
+                    }
                 ),
+
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: Text(
@@ -337,7 +352,12 @@ class _HomeBodyState extends State<HomeBody> {
                     baseColor: Colors.grey.shade300,
                     highlightColor: Colors.grey.shade100,
                     child: PropertyCard(
-                        price: "", img: "", location: "", title: ""),
+                      price: "",
+                      img: "",
+                      location: "",
+                      title: "",
+                      onTap: () {},
+                    ),
                   ),
                   visible: isLoadedProperty,
                   child: SizedBox(
@@ -351,9 +371,23 @@ class _HomeBodyState extends State<HomeBody> {
                         return PropertyCard(
                           price: _propertyFrontCard![index].price.toString(),
                           img: _propertyFrontCard![index].fronPhoto.toString(),
-                          location:
-                              _propertyFrontCard![index].areaName.toString(),
+                          location: _propertyFrontCard![index].areaName.toString(),
                           title: _propertyFrontCard![index].titel.toString(),
+                          onTap: ()  async {
+                            if(isLoadedProperty){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        SinglePropertyDetailPage(
+                                          adId: _propertyFrontCard![index]
+                                              .id
+                                              .toString(),
+                                        )));}
+                            else{
+                              Center(child: CircularProgressIndicator(),);
+                            }
+                          },
                         );
                       },
                       gridDelegate:
@@ -394,6 +428,7 @@ class _HomeBodyState extends State<HomeBody> {
                       location: "",
                       title: "",
                       logo: "",
+                      onTap: () {},
                     ),
                   ),
                   visible: isLoadedCars,
@@ -408,9 +443,20 @@ class _HomeBodyState extends State<HomeBody> {
                         return CarsCard(
                           price: _carsFrontCard![index].price.toString(),
                           img: _carsFrontCard![index].fronPhoto.toString(),
-                          location: _carsFrontCard![index].areaName.toString(),
+                          location: _carsFrontCard![index].id.toString(),
                           title: _carsFrontCard![index].title.toString(),
                           logo: _carsFrontCard![index].logo.toString(),
+                          onTap: () async {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SingleCarDetailsPage(
+                                      adId: _carsFrontCard![index]
+                                          .id
+                                          .toString(),
+                                    )));
+
+                          },
                         );
                       },
                       gridDelegate:
@@ -461,6 +507,55 @@ class _HomeBodyState extends State<HomeBody> {
       ),
     );
   }
+
+  Widget buildTabs(List<Tabs>? data) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * .2,
+      width: MediaQuery.of(context).size.width,
+      child: GridView.builder(
+        itemCount: data?.length,
+        itemBuilder: (context, index) {
+          return DubzillCardWidget(
+            title: context.locale.toString() == 'ar'
+                ? data![index].arabicLabel
+                : data![index].englishLabel,
+            icon: data[index].icon,
+            onTap: () async {
+              print(Intl.getCurrentLocale());
+              if (data[index].id == '1') {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => PropertyForRentTypes(
+                          parentId: data[index].id,
+                        )));
+              } else if (data[index].id == '2') {
+                filterId.add(data[index].id);
+                filterName.add(data[index].name);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => PropertyForSaleTypes(
+                          parentId: data[index].id,
+                        )));
+              } else if (data[index].id == '3') {
+                filterId.add(data[index].id);
+                filterName.add(data[index].name);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const MotorsSale()));
+              }
+            },
+          );
+        },
+        gridDelegate:
+        const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+        ),
+      ),
+    );
+  }
 }
 
 class PropertyCard extends StatelessWidget {
@@ -470,25 +565,22 @@ class PropertyCard extends StatelessWidget {
     required this.title,
     required this.location,
     required this.price,
+    required this.onTap,
   }) : super(key: key);
   final String img;
   final String title;
   final String location;
   final String price;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SinglePropertyDetailPage()));
-        },
+        onTap: onTap,
         child: Container(
-          height: MediaQuery.of(context).size.height * .33,
+          height: MediaQuery.of(context).size.height * .35,
           width: MediaQuery.of(context).size.width * .6,
           decoration: BoxDecoration(
               boxShadow: [
@@ -648,200 +740,4 @@ class PropertyCard extends StatelessWidget {
   }
 }
 
-class CarsCard extends StatelessWidget {
-  const CarsCard({
-    Key? key,
-    required this.img,
-    required this.title,
-    required this.location,
-    required this.price,
-    required this.logo,
-  }) : super(key: key);
-  final String img;
-  final String title;
-  final String location;
-  final String price;
-  final String logo;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => SingleCarDetailsPage()));
-        },
-        child: Container(
-          height: MediaQuery.of(context).size.height * .33,
-          width: MediaQuery.of(context).size.width * .6,
-          decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(blurRadius: 10.0, color: Colors.grey.withOpacity(0.5))
-              ],
-              color: const Color(0xfff2f2f2),
-              borderRadius: BorderRadius.circular(20)),
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Stack(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * .22,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          image: DecorationImage(
-                              image: AssetImage("assets/placeholder.png"),
-                              fit: BoxFit.cover)),
-                    ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * .22,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 12.0,
-                                color: Colors.grey.withOpacity(0.5))
-                          ],
-                        ),
-                        child: FadeInImage.assetNetwork(
-                          fit: BoxFit.cover,
-                          image: "http://192.168.15.124/easy/image/${img}",
-                          placeholder: "assets/placeholder.png",
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          overflow: TextOverflow.ellipsis),
-                    ),
-                    Container(
-                      height: 50,
-                      width: 50,
-                      padding: const EdgeInsets.only(right: 12.0),
-                      decoration: const BoxDecoration(
-                          border: Border(
-                              right: BorderSide(
-                                  width: 1.0, color: Colors.white24))),
-                      child: SvgPicture.asset(
-                        logo,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.location_on_rounded,
-                      size: 15,
-                      color: Colors.teal,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      location,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black54,
-                          overflow: TextOverflow.ellipsis),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.local_gas_station,
-                          size: 17,
-                          color: Colors.teal,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Gasoline",
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black54,
-                              overflow: TextOverflow.ellipsis),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.speed,
-                          size: 17,
-                          color: Colors.teal,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "170,000 Km",
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black54,
-                              overflow: TextOverflow.ellipsis),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.settings,
-                          size: 17,
-                          color: Colors.teal,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Auto",
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black54,
-                              overflow: TextOverflow.ellipsis),
-                        )
-                      ],
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+

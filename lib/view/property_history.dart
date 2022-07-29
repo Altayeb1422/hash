@@ -448,7 +448,7 @@ class _HistoryPropertyCardState extends State<HistoryPropertyCard> {
               Stack(
                 children: [
                   Container(
-                    width: MediaQuery.of(context).size.width * .4,
+                    width: MediaQuery.of(context).size.width * .38,
                     height: MediaQuery.of(context).size.height,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 import '../model/cars_card_view_model.dart';
@@ -17,7 +19,7 @@ class FrontViewCard
       return propertyCardViewFromJson(json);
     }
   }
-  Future<List<CarsCardView>?> carsCardView() async
+  Future<List<CarsCardView>> carsCardView() async
   {
     var client = http.Client();
     var uri = Uri.parse("http://192.168.15.124/easy/cars_cardView_view.php");
@@ -27,5 +29,6 @@ class FrontViewCard
       var json = response.body;
       return carsCardViewFromJson(json);
     }
+    return carsCardViewFromJson(response.body);
   }
 }

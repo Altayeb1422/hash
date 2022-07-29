@@ -20,7 +20,7 @@ class HistoryViewCard
   Future<List<CarsCardView>?> carsCardView() async
   {
     var client = http.Client();
-    var uri = Uri.parse("http://192.168.15.124/easy/cars_cardView_view.php");
+    var uri = Uri.parse("http://192.168.15.124/easy/cars_cardview_view.php");
     var response = await client.get(uri);
     if(response.statusCode == 200)
     {

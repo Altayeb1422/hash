@@ -14,8 +14,8 @@ class UploadPropertyForRentCatigory extends StatefulWidget {
       _UploadPropertyForRentCatigoryState();
 }
 
-class _UploadPropertyForRentCatigoryState
-    extends State<UploadPropertyForRentCatigory> {
+class _UploadPropertyForRentCatigoryState extends State<UploadPropertyForRentCatigory> {
+
   List<FilterTabs>? filterTabs;
   var isLoaded = false;
 

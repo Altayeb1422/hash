@@ -2,16 +2,23 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:line_icons/line_icons.dart';
+import '../model/fetch_car_detailes_model.dart';
+import '../services/ads_details_http_request.dart';
 import 'motors/cars_detailes_widget.dart';
 
 class SingleCarDetailsPage extends StatefulWidget {
-  const SingleCarDetailsPage({Key? key}) : super(key: key);
+  const SingleCarDetailsPage({Key? key, this.adId}) : super(key: key);
+
+  final dynamic adId;
 
   @override
   State<SingleCarDetailsPage> createState() => _SingleCarDetailsPageState();
 }
 
 class _SingleCarDetailsPageState extends State<SingleCarDetailsPage> {
+   FetchCarDetails? _getCarDetails;
+  var isLoaded = false;
+
   final img = [
     'assets/sedan 5.jpg',
     'assets/sedan 4.jpg',
@@ -20,6 +27,22 @@ class _SingleCarDetailsPageState extends State<SingleCarDetailsPage> {
     'assets/hatch 4.jpg',
   ];
   int activeIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getCarsDetails();
+  }
+
+  getCarsDetails() async {
+    _getCarDetails = await AdsDetailsService().postCarsAdID(widget.adId);
+    if (_getCarDetails != null) {
+      setState(() {
+        isLoaded = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -90,7 +113,12 @@ class _SingleCarDetailsPageState extends State<SingleCarDetailsPage> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          icon: Icon(Icons.arrow_back_ios, size: 25,), color: Color(0xffF9521E),)),
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                            size: 25,
+                          ),
+                          color: Color(0xffF9521E),
+                        )),
                   )
                 ],
               ),
@@ -113,8 +141,12 @@ class _SingleCarDetailsPageState extends State<SingleCarDetailsPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CarsDetailsWidget(title: 'Nubira', price: '2,800,000', logo: 'assets/cars/daewoo.svg', currency: 'SDG',),
-
+                        CarsDetailsWidget(
+                          title: _getCarDetails!.title.toString(),
+                          price: _getCarDetails!.price.toString(),
+                          logo: 'assets/cars/daewoo.svg',
+                          currency: _getCarDetails!.currency.toString(),
+                        ),
                         SizedBox(
                           height: 25,
                         ),
@@ -126,7 +158,9 @@ class _SingleCarDetailsPageState extends State<SingleCarDetailsPage> {
                               size: 17,
                               color: Colors.teal,
                             ),
-                            SizedBox(width: 5,),
+                            SizedBox(
+                              width: 5,
+                            ),
                             Text(
                               "Khartoum, Gabra",
                               style: TextStyle(
@@ -177,21 +211,20 @@ class _SingleCarDetailsPageState extends State<SingleCarDetailsPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Specs(
-                                title: '5 seats',
+                                title: _getCarDetails!.select2.toString(),
                                 icon: Icons.airline_seat_recline_normal,
                               ),
                               SizedBox(
                                 width: 10,
                               ),
                               Specs(
-                                title: '170,000 Km',
+                                title: _getCarDetails!.distance.toString(),
                                 icon: LineIcons.alternateTachometer,
                               ),
                               SizedBox(
                                 width: 10,
                               ),
-                              Specs(
-                                  icon: LineIcons.gasPump, title: "Gasoline"),
+                              Specs(icon: LineIcons.gasPump, title: _getCarDetails!.fuel.toString()),
                               SizedBox(
                                 width: 10,
                               ),
@@ -203,21 +236,21 @@ class _SingleCarDetailsPageState extends State<SingleCarDetailsPage> {
                                 width: 10,
                               ),
                               Specs(
-                                title: 'white',
+                                title: _getCarDetails!.color.toString(),
                                 icon: LineIcons.brush,
                               ),
                               SizedBox(
                                 width: 10,
                               ),
                               Specs(
-                                title: '2017',
+                                title: _getCarDetails!.model.toString(),
                                 icon: LineIcons.calendar,
                               ),
                               SizedBox(
                                 width: 10,
                               ),
                               Specs(
-                                title: 'Used',
+                                title: _getCarDetails!.state.toString(),
                                 icon: Icons.manage_history,
                               ),
                               SizedBox(
@@ -231,7 +264,7 @@ class _SingleCarDetailsPageState extends State<SingleCarDetailsPage> {
                                 width: 10,
                               ),
                               Specs(
-                                title: '6 Cylinders',
+                                title: _getCarDetails!.engine.toString(),
                                 icon: LineIcons.oilCan,
                               ),
                             ],
@@ -251,11 +284,10 @@ class _SingleCarDetailsPageState extends State<SingleCarDetailsPage> {
                                 overflow: TextOverflow.ellipsis),
                           ),
                         ),
-
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "s simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                            _getCarDetails!.generalDescription.toString(),
                             style: TextStyle(
                               fontSize: 17,
                               color: Colors.black,
@@ -299,7 +331,8 @@ class Specs extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))),
         primary: Colors.white,
         backgroundColor: Color.fromRGBO(64, 75, 96, .9),
       ),
